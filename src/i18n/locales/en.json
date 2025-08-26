@@ -1,0 +1,126 @@
+{
+  "header": {
+    "title": "GPE-Yale Application",
+    "language": "Language"
+  },
+  "stepper": {
+    "step1": "General Information",
+    "step2": "Professional Details",
+    "step3": "Education", 
+    "step4": "Additional Information",
+    "step5": "Funding",
+    "step6": "Summary"
+  },
+  "navigation": {
+    "previous": "Previous",
+    "next": "Next", 
+    "submit": "Submit Application",
+    "edit": "Edit",
+    "newApplication": "New Application",
+    "resumeDraft": "Resume Draft"
+  },
+  "progress": {
+    "step": "Step {{current}} of {{total}}",
+    "complete": "{{percent}}% complete"
+  },
+  "fields": {
+    "nom": "Last Name",
+    "prenom": "First Name", 
+    "nationalite": "Nationality",
+    "sexe": "Gender",
+    "date_naissance": "Date of Birth",
+    "lieu_naissance": "Place of Birth",
+    "telephone": "Phone",
+    "email": "Email Address",
+    "organisation": "Organization",
+    "pays": "Country",
+    "departement": "Department/Service",
+    "poste_actuel": "Current Position",
+    "description_taches": "Job Description",
+    "diplome": "Highest Degree",
+    "institution": "Institution",
+    "domaine": "Field of Study",
+    "langues": "Languages Spoken",
+    "niveaux": "Proficiency Level",
+    "resultats_attendus": "Expected Results", 
+    "autres_infos": "Additional Information",
+    "mode_financement": "Funding Method",
+    "institution_financement": "Funding Institution",
+    "contact_financement": "Funding Contact",
+    "email_contact_financement": "Contact Email",
+    "source_information": "How did you hear about us?",
+    "consentement": "I consent to data processing"
+  },
+  "placeholders": {
+    "search": "Search...",
+    "searchCountry": "Search country...",
+    "selectOption": "Select an option",
+    "enterText": "Enter your text here..."
+  },
+  "options": {
+    "sexe": {
+      "Homme": "Male",
+      "Femme": "Female"
+    },
+    "diplomes": {
+      "Baccalauréat": "High School Diploma",
+      "BTS/DUT": "Technical Degree", 
+      "Licence": "Bachelor's Degree",
+      "Master/MBA": "Master's/MBA",
+      "Doctorat": "Doctorate"
+    },
+    "langues": {
+      "Français": "French",
+      "Anglais": "English",
+      "Espagnol": "Spanish", 
+      "Portugais": "Portuguese",
+      "Arabe": "Arabic",
+      "Chinois": "Chinese"
+    },
+    "niveaux": {
+      "Débutant": "Beginner",
+      "Intermédiaire": "Intermediate",
+      "Avancé": "Advanced", 
+      "Courant": "Fluent",
+      "Natif": "Native"
+    },
+    "financement": {
+      "Vous-même": "Self-funded",
+      "Employeur": "Employer",
+      "Bourse": "Scholarship",
+      "Organisme public": "Public Organization", 
+      "Autre": "Other"
+    },
+    "sources": {
+      "Site web": "Website",
+      "Réseaux sociaux": "Social Media",
+      "Bouche-à-oreille": "Word of mouth",
+      "Partenaire": "Partner",
+      "Autre": "Other"
+    }
+  },
+  "countries": {
+    "separator": {
+      "priority": "— Priority Countries —",
+      "others": "— Other Countries —"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email format",
+    "phone": "Invalid phone format (ex: +237 699 00 00 00)",
+    "minAge": "You must be at least 18 years old",
+    "languageLevel": "Please indicate the level for each selected language",
+    "errors": "Please correct the following errors:"
+  },
+  "confirmation": {
+    "title": "Application Submitted Successfully!",
+    "message": "Your application has been recorded. You will receive an email confirmation shortly.",
+    "reference": "Reference: {{id}}"
+  },
+  "errors": {
+    "network": "Network error. Please try again.",
+    "server": "Server error. Please try again later.",
+    "validation": "Some information is incorrect."
+  }
+}
