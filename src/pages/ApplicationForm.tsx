@@ -123,6 +123,36 @@ export default function ApplicationForm() {
     setIsSubmitting(true);
     
     try {
+      // Map frontend (French) keys to backend (English) API contract
+      const apiPayload = {
+        firstName: data.prenom,
+        lastName: data.nom,
+        nationality: data.nationalite,
+        gender: data.sexe,
+        dateOfBirth: data.date_naissance,
+        placeOfBirth: data.lieu_naissance,
+        phoneNumber: data.telephone,
+        email: data.email,
+        organization: data.organisation,
+        country: data.pays,
+        department: data.departement,
+        currentPosition: data.poste_actuel,
+        taskDescription: data.description_taches,
+        diploma: data.diplome,
+        institution: data.institution,
+        field: data.domaine,
+        languages: data.langues,
+        languageLevels: data.niveaux,
+        expectedResults: data.resultats_attendus,
+        otherInfo: data.autres_infos,
+        fundingMode: data.mode_financement,
+        fundingInstitution: data.institution_financement ?? undefined,
+        fundingContact: data.contact_financement ?? undefined,
+        fundingContactEmail: data.email_contact_financement ?? undefined,
+        informationSource: data.source_information,
+        consent: data.consentement
+      };
+
       const API_BASE = 'https://gpe-yale.edocsflow.com/api';
       const response = await fetch(`${API_BASE}/candidatures`, {
         method: 'POST',
@@ -130,7 +160,7 @@ export default function ApplicationForm() {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(data)
+        body: JSON.stringify(apiPayload)
       });
 
       const result = await response.json();
