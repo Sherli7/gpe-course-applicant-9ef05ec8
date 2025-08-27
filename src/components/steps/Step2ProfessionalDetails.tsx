@@ -34,48 +34,48 @@ export function Step2ProfessionalDetails() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="departement">{t('fields.departement')}</Label>
+          <Label htmlFor="department">{t('fields.departement')}</Label>
           <Input
-            id="departement"
-            {...register('departement')}
+            id="department"
+            {...register('department')}
             placeholder={t('fields.departement')}
-            className={errors.departement ? 'border-destructive' : ''}
+            className={errors.department ? 'border-destructive' : ''}
           />
-          {errors.departement && (
+          {errors.department && (
             <p className="text-sm text-destructive">
-              {t(errors.departement?.message as string)}
+              {t(errors.department?.message as string)}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="poste_actuel">{t('fields.poste_actuel')}</Label>
+          <Label htmlFor="currentPosition">{t('fields.poste_actuel')}</Label>
           <Input
-            id="poste_actuel"
-            {...register('poste_actuel')}
+            id="currentPosition"
+            {...register('currentPosition')}
             placeholder={t('fields.poste_actuel')}
-            className={errors.poste_actuel ? 'border-destructive' : ''}
+            className={errors.currentPosition ? 'border-destructive' : ''}
           />
-          {errors.poste_actuel && (
+          {errors.currentPosition && (
             <p className="text-sm text-destructive">
-              {t(errors.poste_actuel?.message as string)}
+              {t(errors.currentPosition?.message as string)}
             </p>
           )}
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description_taches">{t('fields.description_taches')}</Label>
+        <Label htmlFor="taskDescription">{t('fields.description_taches')}</Label>
         <Textarea
-          id="description_taches"
-          {...register('description_taches')}
+          id="taskDescription"
+          {...register('taskDescription')}
           placeholder={t('placeholders.enterText')}
           rows={4}
-          className={errors.description_taches ? 'border-destructive' : ''}
+          className={errors.taskDescription ? 'border-destructive' : ''}
         />
-        {errors.description_taches && (
+        {errors.taskDescription && (
           <p className="text-sm text-destructive">
-            {t(errors.description_taches?.message as string)}
+            {t(errors.taskDescription?.message as string)}
           </p>
         )}
       </div>

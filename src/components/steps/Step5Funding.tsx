@@ -11,7 +11,7 @@ export function Step5Funding() {
   const { register, setValue, watch, formState: { errors } } = useFormContext();
   
   const values = watch();
-  const fundingMethod = values.mode_financement;
+  const fundingMethod = values.fundingMode;
   const needsFundingDetails = fundingMethod && fundingMethod !== 'Vous-même';
 
   const fundingOptions = [
@@ -59,7 +59,7 @@ export function Step5Funding() {
           <Label className="text-base font-medium">{t('fields.mode_financement')}</Label>
           <RadioGroup 
             value={fundingMethod} 
-            onValueChange={(value) => setValue('mode_financement', value)}
+            onValueChange={(value) => setValue('fundingMode', value)}
           >
             {fundingOptions.map((option) => (
               <div key={option.value} className="flex items-center space-x-2">
@@ -70,9 +70,9 @@ export function Step5Funding() {
               </div>
             ))}
           </RadioGroup>
-          {errors.mode_financement && (
+          {errors.fundingMode && (
             <p className="text-sm text-destructive">
-              {t(errors.mode_financement?.message as string)}
+              {t(errors.fundingMode?.message as string)}
             </p>
           )}
         </div>
@@ -80,56 +80,56 @@ export function Step5Funding() {
         {needsFundingDetails && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-lg bg-muted/20">
             <div className="space-y-2">
-              <Label htmlFor="institution_financement">
+              <Label htmlFor="fundingInstitution">
                 {t('fields.institution_financement')}
                 <span className="text-muted-foreground ml-1">(optionnel)</span>
               </Label>
               <Input
-                id="institution_financement"
-                {...register('institution_financement')}
+                id="fundingInstitution"
+                {...register('fundingInstitution')}
                 placeholder={t('fields.institution_financement')}
-                className={errors.institution_financement ? 'border-destructive' : ''}
+                className={errors.fundingInstitution ? 'border-destructive' : ''}
               />
-              {errors.institution_financement && (
+              {errors.fundingInstitution && (
                 <p className="text-sm text-destructive">
-                  {t(errors.institution_financement?.message as string)}
+                  {t(errors.fundingInstitution?.message as string)}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="contact_financement">
+              <Label htmlFor="fundingContact">
                 {t('fields.contact_financement')}
                 <span className="text-muted-foreground ml-1">(optionnel)</span>
               </Label>
               <Input
-                id="contact_financement"
-                {...register('contact_financement')}
+                id="fundingContact"
+                {...register('fundingContact')}
                 placeholder={t('fields.contact_financement')}
-                className={errors.contact_financement ? 'border-destructive' : ''}
+                className={errors.fundingContact ? 'border-destructive' : ''}
               />
-              {errors.contact_financement && (
+              {errors.fundingContact && (
                 <p className="text-sm text-destructive">
-                  {t(errors.contact_financement?.message as string)}
+                  {t(errors.fundingContact?.message as string)}
                 </p>
               )}
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="email_contact_financement">
+              <Label htmlFor="fundingContactEmail">
                 {t('fields.email_contact_financement')}
                 <span className="text-muted-foreground ml-1">(optionnel)</span>
               </Label>
               <Input
-                id="email_contact_financement"
+                id="fundingContactEmail"
                 type="email"
-                {...register('email_contact_financement')}
+                {...register('fundingContactEmail')}
                 placeholder="contact@organisation.com"
-                className={errors.email_contact_financement ? 'border-destructive' : ''}
+                className={errors.fundingContactEmail ? 'border-destructive' : ''}
               />
-              {errors.email_contact_financement && (
+              {errors.fundingContactEmail && (
                 <p className="text-sm text-destructive">
-                  {t(errors.email_contact_financement?.message as string)}
+                  {t(errors.fundingContactEmail?.message as string)}
                 </p>
               )}
             </div>
@@ -137,29 +137,29 @@ export function Step5Funding() {
         )}
 
         <div className="space-y-2">
-          <Label htmlFor="source_information">{t('fields.source_information')}</Label>
+          <Label htmlFor="informationSource">{t('fields.source_information')}</Label>
           <SearchableSelect
             options={sourceOptions}
-            value={values.source_information}
-            onValueChange={(value) => setValue('source_information', value)}
+            value={values.informationSource}
+            onValueChange={(value) => setValue('informationSource', value)}
             placeholder={t('fields.source_information')}
-            className={errors.source_information ? 'border-destructive' : ''}
+            className={errors.informationSource ? 'border-destructive' : ''}
           />
-          {errors.source_information && (
+          {errors.informationSource && (
             <p className="text-sm text-destructive">
-              {t(errors.source_information?.message as string)}
+              {t(errors.informationSource?.message as string)}
             </p>
           )}
         </div>
 
         <div className="flex items-start space-x-2 p-4 border rounded-lg">
           <Checkbox
-            id="consentement"
-            checked={values.consentement}
-            onCheckedChange={(checked) => setValue('consentement', checked)}
+            id="consent"
+            checked={values.consent}
+            onCheckedChange={(checked) => setValue('consent', checked)}
           />
           <div className="space-y-1">
-            <Label htmlFor="consentement" className="text-sm font-normal cursor-pointer">
+            <Label htmlFor="consent" className="text-sm font-normal cursor-pointer">
               {t('fields.consentement')}
             </Label>
             <p className="text-xs text-muted-foreground">
@@ -168,9 +168,9 @@ export function Step5Funding() {
             </p>
           </div>
         </div>
-        {errors.consentement && (
+        {errors.consent && (
           <p className="text-sm text-destructive">
-            {t(errors.consentement?.message as string)}
+            {t(errors.consent?.message as string)}
           </p>
         )}
       </div>

@@ -33,36 +33,36 @@ export function Step4AdditionalInfo() {
 
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="resultats_attendus">{t('fields.resultats_attendus')}</Label>
+          <Label htmlFor="expectedResults">{t('fields.resultats_attendus')}</Label>
           <Textarea
-            id="resultats_attendus"
-            {...register('resultats_attendus')}
+            id="expectedResults"
+            {...register('expectedResults')}
             placeholder={t('placeholders.enterText')}
             rows={4}
-            className={errors.resultats_attendus ? 'border-destructive' : ''}
+            className={errors.expectedResults ? 'border-destructive' : ''}
           />
-          {errors.resultats_attendus && (
+          {errors.expectedResults && (
             <p className="text-sm text-destructive">
-              {t(errors.resultats_attendus?.message as string)}
+              {t(errors.expectedResults?.message as string)}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="autres_infos">
+          <Label htmlFor="otherInfo">
             {t('fields.autres_infos')} 
             <span className="text-muted-foreground ml-1">(optionnel)</span>
           </Label>
           <Textarea
-            id="autres_infos"
-            {...register('autres_infos')}
+            id="otherInfo"
+            {...register('otherInfo')}
             placeholder={t('placeholders.enterText')}
             rows={4}
-            className={errors.autres_infos ? 'border-destructive' : ''}
+            className={errors.otherInfo ? 'border-destructive' : ''}
           />
-          {errors.autres_infos && (
+          {errors.otherInfo && (
             <p className="text-sm text-destructive">
-              {t(errors.autres_infos?.message as string)}
+              {t(errors.otherInfo?.message as string)}
             </p>
           )}
         </div>

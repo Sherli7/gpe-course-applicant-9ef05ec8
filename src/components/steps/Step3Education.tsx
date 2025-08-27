@@ -10,8 +10,8 @@ export function Step3Education() {
   const { register, setValue, watch, formState: { errors } } = useFormContext();
   
   const values = watch();
-  const selectedLanguages = values.langues || [];
-  const languageLevels = values.niveaux || {};
+  const selectedLanguages = values.languages || [];
+  const languageLevels = values.languageLevels || {};
 
   const diplomeOptions = [
     { value: 'Baccalauréat', label: t('options.diplomes.Baccalauréat') },
@@ -47,13 +47,13 @@ export function Step3Education() {
       // Remove level for unchecked language
       const newLevels = { ...languageLevels };
       delete newLevels[language];
-      setValue('niveaux', newLevels);
+      setValue('languageLevels', newLevels);
     }
-    setValue('langues', newLanguages);
+    setValue('languages', newLanguages);
   };
 
   const handleLevelChange = (language: string, level: string) => {
-    setValue('niveaux', {
+    setValue('languageLevels', {
       ...languageLevels,
       [language]: level
     });
@@ -85,17 +85,17 @@ export function Step3Education() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="diplome">{t('fields.diplome')}</Label>
+          <Label htmlFor="diploma">{t('fields.diplome')}</Label>
           <SearchableSelect
             options={diplomeOptions}
-            value={values.diplome}
-            onValueChange={(value) => setValue('diplome', value)}
+            value={values.diploma}
+            onValueChange={(value) => setValue('diploma', value)}
             placeholder={t('fields.diplome')}
-            className={errors.diplome ? 'border-destructive' : ''}
+            className={errors.diploma ? 'border-destructive' : ''}
           />
-          {errors.diplome && (
+          {errors.diploma && (
             <p className="text-sm text-destructive">
-              {t(errors.diplome?.message as string)}
+              {t(errors.diploma?.message as string)}
             </p>
           )}
         </div>
@@ -116,16 +116,16 @@ export function Step3Education() {
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="domaine">{t('fields.domaine')}</Label>
+          <Label htmlFor="field">{t('fields.domaine')}</Label>
           <Input
-            id="domaine"
-            {...register('domaine')}
+            id="field"
+            {...register('field')}
             placeholder={t('fields.domaine')}
-            className={errors.domaine ? 'border-destructive' : ''}
+            className={errors.field ? 'border-destructive' : ''}
           />
-          {errors.domaine && (
+          {errors.field && (
             <p className="text-sm text-destructive">
-              {t(errors.domaine?.message as string)}
+              {t(errors.field?.message as string)}
             </p>
           )}
         </div>
@@ -173,14 +173,14 @@ export function Step3Education() {
           })}
         </div>
 
-        {errors.langues && (
+        {errors.languages && (
           <p className="text-sm text-destructive">
-            {t(errors.langues?.message as string)}
+            {t(errors.languages?.message as string)}
           </p>
         )}
-        {errors.niveaux && (
+        {errors.languageLevels && (
           <p className="text-sm text-destructive">
-            {t(errors.niveaux?.message as string)}
+            {t(errors.languageLevels?.message as string)}
           </p>
         )}
       </div>

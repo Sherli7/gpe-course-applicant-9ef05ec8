@@ -20,9 +20,9 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
   };
 
   const formatLanguages = () => {
-    const { langues = [], niveaux = {} } = values;
-    return langues.map((lang: string) => 
-      `${lang} (${niveaux[lang] || 'N/A'})`
+    const { languages = [], languageLevels = {} } = values;
+    return languages.map((lang: string) => 
+      `${lang} (${languageLevels[lang] || 'N/A'})`
     ).join(', ');
   };
 
@@ -31,34 +31,34 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       title: t('stepper.step1'),
       step: 1,
       fields: [
-        { label: t('fields.nom'), value: values.nom },
-        { label: t('fields.prenom'), value: values.prenom },
-        { label: t('fields.nationalite'), value: values.nationalite },
-        { label: t('fields.sexe'), value: values.sexe ? t(`options.sexe.${values.sexe}`) : '' },
-        { label: t('fields.date_naissance'), value: formatDate(values.date_naissance) },
-        { label: t('fields.lieu_naissance'), value: values.lieu_naissance },
-        { label: t('fields.telephone'), value: values.telephone },
+        { label: t('fields.nom'), value: values.lastName },
+        { label: t('fields.prenom'), value: values.firstName },
+        { label: t('fields.nationalite'), value: values.nationality },
+        { label: t('fields.sexe'), value: values.gender ? t(`options.sexe.${values.gender}`) : '' },
+        { label: t('fields.date_naissance'), value: formatDate(values.dateOfBirth) },
+        { label: t('fields.lieu_naissance'), value: values.placeOfBirth },
+        { label: t('fields.telephone'), value: values.phoneNumber },
         { label: t('fields.email'), value: values.email },
-        { label: t('fields.organisation'), value: values.organisation },
-        { label: t('fields.pays'), value: values.pays }
+        { label: t('fields.organisation'), value: values.organization },
+        { label: t('fields.pays'), value: values.country }
       ]
     },
     {
       title: t('stepper.step2'),
       step: 2,
       fields: [
-        { label: t('fields.departement'), value: values.departement },
-        { label: t('fields.poste_actuel'), value: values.poste_actuel },
-        { label: t('fields.description_taches'), value: values.description_taches }
+        { label: t('fields.departement'), value: values.department },
+        { label: t('fields.poste_actuel'), value: values.currentPosition },
+        { label: t('fields.description_taches'), value: values.taskDescription }
       ]
     },
     {
       title: t('stepper.step3'),
       step: 3,
       fields: [
-        { label: t('fields.diplome'), value: values.diplome ? t(`options.diplomes.${values.diplome}`) : '' },
+        { label: t('fields.diplome'), value: values.diploma ? t(`options.diplomes.${values.diploma}`) : '' },
         { label: t('fields.institution'), value: values.institution },
-        { label: t('fields.domaine'), value: values.domaine },
+        { label: t('fields.domaine'), value: values.field },
         { label: t('fields.langues'), value: formatLanguages() }
       ]
     },
@@ -66,8 +66,8 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       title: t('stepper.step4'),
       step: 4,
       fields: [
-        { label: t('fields.resultats_attendus'), value: values.resultats_attendus },
-        { label: t('fields.autres_infos'), value: values.autres_infos || 'N/A' }
+        { label: t('fields.resultats_attendus'), value: values.expectedResults },
+        { label: t('fields.autres_infos'), value: values.otherInfo || 'N/A' }
       ]
     },
     {
@@ -76,18 +76,18 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       fields: [
         { 
           label: t('fields.mode_financement'), 
-          value: values.mode_financement ? t(`options.financement.${values.mode_financement}`) : ''
+          value: values.fundingMode ? t(`options.financement.${values.fundingMode}`) : ''
         },
-        { label: t('fields.institution_financement'), value: values.institution_financement || 'N/A' },
-        { label: t('fields.contact_financement'), value: values.contact_financement || 'N/A' },
-        { label: t('fields.email_contact_financement'), value: values.email_contact_financement || 'N/A' },
+        { label: t('fields.institution_financement'), value: values.fundingInstitution || 'N/A' },
+        { label: t('fields.contact_financement'), value: values.fundingContact || 'N/A' },
+        { label: t('fields.email_contact_financement'), value: values.fundingContactEmail || 'N/A' },
         { 
           label: t('fields.source_information'), 
-          value: values.source_information ? t(`options.sources.${values.source_information}`) : ''
+          value: values.informationSource ? t(`options.sources.${values.informationSource}`) : ''
         },
         { 
           label: t('fields.consentement'), 
-          value: values.consentement ? 'Oui' : 'Non'
+          value: values.consent ? 'Oui' : 'Non'
         }
       ]
     }
