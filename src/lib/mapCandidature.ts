@@ -1,76 +1,94 @@
 // src/lib/mapCandidature.ts
-export type FrenchForm = {
-  nom: string;
-  prenom: string;
-  nationalite: string;
-  sexe: string;
-  date_naissance: string;       // "YYYY-MM-DD" OK (ISO 8601 date)
-  lieu_naissance: string;
-  telephone: string;
+
+export type CandidaturePayload = {
+  firstName: string;
+  lastName: string;
+  nationality: string;
+  gender: string;
+  dateOfBirth: string;               // 'YYYY-MM-DD'
+  placeOfBirth: string;
+  phoneNumber: string;
   email: string;
-  organisation?: string | null;
-  pays: string;
+  organization: string | null;
+  country: string;
 
-  departement?: string | null;
-  poste_actuel: string;
-  description_taches: string;
+  department: string | null;
+  currentPosition: string;
+  taskDescription: string;
 
-  diplome: string;
+  diploma: string;
   institution: string;
-  domaine: string;
-  langues: string[];
-  niveaux: Record<string, string>;
+  field: string;
+  languages: string[];
+  languageLevels: Record<string, string>;
 
-  resultats_attendus: string;
-  autres_infos?: string | null;
+  expectedResults: string;
+  otherInformation: string | null;
 
-  mode_financement: string;     // radio (ex: "Vous-même")
-  institution_financement?: string | null;
-  contact_financement?: string | null;
-  email_contact_financement?: string | null;
+  fundingSource: string[];           // array obligatoire
+  institutionName: string | null;
+  contactPerson: string | null;
+  contactEmail: string | null;
 
-  source_information: string;
-  consentement: boolean;
+  informationSource: string;
+  consent: boolean;
 };
 
-export function mapFormFRtoEN(v: FrenchForm) {
+type AnyObj = Record<string, any>;
+
+// Utilitaire: lit d’abord la clé EN, sinon la FR
+const get = (obj: AnyObj, en: string, fr?: string) =>
+  obj?.[en] ?? (fr ? obj?.[fr] : undefined);
+
+/**
+ * Transforme les valeurs du form (FR ou EN) vers le payload attendu par le backend.
+ */
+export function mapFormToCandidature(v: AnyObj): CandidaturePayload {
+  const fundingOne = get(v, 'fundingSource', 'mode_financement');
+  const fundingSource: string[] = Array.isArray(fundingOne)
+    ? fundingOne
+    : (fundingOne ? [fundingOne] : []);
+
   return {
     // Step 1
-    firstName: v.prenom,
-    lastName: v.nom,
-    nationality: v.nationalite,
-    gender: v.sexe,
-    dateOfBirth: v.date_naissance,         // déjà ISO "YYYY-MM-DD"
-    placeOfBirth: v.lieu_naissance,
-    phoneNumber: v.telephone,
-    email: v.email,
-    organization: v.organisation ?? null,
-    country: v.pays,
+    firstName: get(v, 'firstName', 'prenom') ?? '',
+    lastName: get(v, 'lastName', 'nom') ?? '',
+    nationality: get(v, 'nationality', 'nationalite') ?? '',
+    gender: get(v, 'gender', 'sexe') ?? '',
+    dateOfBirth: get(v, 'dateOfBirth', 'date_naissance') ?? '',
+    placeOfBirth: get(v, 'placeOfBirth', 'lieu_naissance') ?? '',
+    phoneNumber: get(v, 'phoneNumber', 'telephone') ?? '',
+    email: get(v, 'email', 'email') ?? '',
+    organization: get(v, 'organization', 'organisation') ?? null,
+    country: get(v, 'country', 'pays') ?? '',
 
     // Step 2
-    department: v.departement ?? null,
-    currentPosition: v.poste_actuel,
-    taskDescription: v.description_taches,
+    department: get(v, 'department', 'departement') ?? null,
+    currentPosition: get(v, 'currentPosition', 'poste_actuel') ?? '',
+    taskDescription: get(v, 'taskDescription', 'description_taches') ?? '',
 
     // Step 3
-    diploma: v.diplome,
-    institution: v.institution,
-    field: v.domaine,
-    languages: v.langues ?? [],
-    languageLevels: v.niveaux ?? {},
+    diploma: get(v, 'diploma', 'diplome') ?? '',
+    institution: get(v, 'institution', 'institution') ?? '',
+    field: get(v, 'field', 'domaine') ?? '',
+    languages: get(v, 'languages', 'langues') ?? [],
+    languageLevels: get(v, 'languageLevels', 'niveaux') ?? {},
 
     // Step 4
-    expectedResults: v.resultats_attendus,
-    otherInformation: v.autres_infos ?? null,
+    expectedResults: get(v, 'expectedResults', 'resultats_attendus') ?? '',
+    otherInformation: get(v, 'otherInformation', 'autres_infos') ?? null,
 
     // Step 5
-    fundingSource: v.mode_financement ? [v.mode_financement] : [], // ARRAY requis par le backend
-    institutionName: v.institution_financement ?? null,
-    contactPerson: v.contact_financement ?? null,
-    contactEmail: v.email_contact_financement ?? null,
-    informationSource: v.source_information,
+    fundingSource,
+    institutionName: get(v, 'institutionName', 'institution_financement') ?? null,
+    contactPerson: get(v, 'contactPerson', 'contact_financement') ?? null,
+    contactEmail: get(v, 'contactEmail', 'email_contact_financement') ?? null,
+    informationSource: get(v, 'informationSource', 'source_information') ?? '',
 
     // Divers
-    consent: !!v.consentement,
+    consent: !!(get(v, 'consent', 'consentement')),
   };
 }
+
+// (facultatif) si tu veux aussi permettre l’import par défaut
+export default mapFormToCandidature;
