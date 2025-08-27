@@ -3,7 +3,15 @@ import { useState, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { applicationSchema, ApplicationFormData, step1Schema, step2Schema, step3Schema, step4Schema, step5Schema } from '@/schemas/applicationSchema';
+import {
+  applicationSchema,
+  ApplicationFormData,
+  step1Schema,
+  step2Schema,
+  step3Schema,
+  step4Schema,
+  step5Schema
+} from '@/schemas/applicationSchema';
 import { Header } from '@/components/Header';
 import { Stepper } from '@/components/Stepper';
 import { Step1GeneralInfo } from '@/components/steps/Step1GeneralInfo';
@@ -21,7 +29,7 @@ const DRAFT_STORAGE_KEY = 'application-draft';
 
 const stepSchemas = [
   step1Schema,
-  step2Schema, 
+  step2Schema,
   step3Schema,
   step4Schema,
   step5Schema,
@@ -48,6 +56,7 @@ export default function ApplicationForm() {
 
   const { handleSubmit, trigger, getValues, setValue, watch } = methods;
 
+  // Load draft from localStorage
   useEffect(() => {
     const draft = localStorage.getItem(DRAFT_STORAGE_KEY);
     if (draft) {
@@ -62,11 +71,13 @@ export default function ApplicationForm() {
     }
   }, [setValue]);
 
+  // Auto-save draft
   const values = watch();
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(values));
     }, 1000);
+
     return () => clearTimeout(timeoutId);
   }, [values]);
 
@@ -80,12 +91,16 @@ export default function ApplicationForm() {
     } catch (error) {
       setStepErrors(prev => ({ ...prev, [currentStep]: true }));
       setCompletedSteps(prev => ({ ...prev, [currentStep]: false }));
+
+      // Trigger validation to show field errors
       await trigger();
+
       toast({
         title: t('validation.errors'),
         description: t('errors.validation'),
         variant: 'destructive'
       });
+
       return false;
     }
   };
@@ -115,8 +130,12 @@ export default function ApplicationForm() {
 
   const onSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true);
+
     try {
+      // IMPORTANT : mappe les clés (FR/EN) vers le modèle backend
       const payload = mapFormToCandidature(data);
+      console.log('[Candidature] Payload envoyé au backend:', payload);
+
       const API_BASE = 'https://gpe-yale.edocsflow.com/api';
       const response = await fetch(`${API_BASE}/candidatures`, {
         method: 'POST',
@@ -129,6 +148,7 @@ export default function ApplicationForm() {
       });
 
       const result = await response.json().catch(() => ({}));
+
       if (response.ok && result?.success) {
         localStorage.removeItem(DRAFT_STORAGE_KEY);
         toast({
@@ -136,11 +156,14 @@ export default function ApplicationForm() {
           description: t('confirmation.message'),
           variant: 'default'
         });
+
+        // Reset form for new application
         methods.reset();
         setCurrentStep(1);
         setCompletedSteps({});
         setStepErrors({});
       } else {
+        // Affiche le message exact du backend pour diagnostiquer
         const msg = result?.message || response.statusText || 'Submission failed';
         toast({
           title: t('errors.server'),
@@ -148,10 +171,10 @@ export default function ApplicationForm() {
           variant: 'destructive'
         });
       }
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: t('errors.server'),
-        description: error?.message || t('errors.network'),
+        description: t('errors.network'),
         variant: 'destructive'
       });
     } finally {
@@ -183,6 +206,7 @@ export default function ApplicationForm() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {hasDraft && currentStep === 1 && (
           <div className="mb-6 bg-primary/10 border border-primary/20 rounded-lg p-4">
@@ -193,9 +217,10 @@ export default function ApplicationForm() {
               variant="outline"
               size="sm"
               onClick={() => {
+                // Draft is already loaded in useEffect
                 toast({
                   title: 'Brouillon chargé',
-                  description: 'Vos données ont été restaurées'
+                  description: 'Vos données ont été restaurées',
                 });
               }}
             >
@@ -203,6 +228,7 @@ export default function ApplicationForm() {
             </Button>
           </div>
         )}
+
         <Card className="rounded-2xl shadow-lg">
           <CardContent className="p-8">
             <Stepper
@@ -211,9 +237,13 @@ export default function ApplicationForm() {
               errors={stepErrors}
               completedSteps={completedSteps}
             />
+
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="mt-8">{renderCurrentStep()}</div>
+                <div className="mt-8">
+                  {renderCurrentStep()}
+                </div>
+
                 <div className="flex justify-between mt-8 pt-6 border-t">
                   <Button
                     type="button"
@@ -223,12 +253,19 @@ export default function ApplicationForm() {
                   >
                     {t('navigation.previous')}
                   </Button>
+
                   {currentStep < TOTAL_STEPS ? (
-                    <Button type="button" onClick={handleNext}>
+                    <Button
+                      type="button"
+                      onClick={handleNext}
+                    >
                       {t('navigation.next')}
                     </Button>
                   ) : (
-                    <Button type="submit" disabled={isSubmitting}>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                    >
                       {isSubmitting ? 'Envoi...' : t('navigation.submit')}
                     </Button>
                   )}
