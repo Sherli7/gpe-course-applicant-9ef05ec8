@@ -47,9 +47,9 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       title: t('stepper.step2'),
       step: 2,
       fields: [
-        { label: t('fields.departement'), value: values.department },
-        { label: t('fields.poste_actuel'), value: values.currentPosition },
-        { label: t('fields.description_taches'), value: values.taskDescription }
+        { label: t('fields.departement'), value: values.departement },
+        { label: t('fields.posteActuel'), value: values.posteActuel },
+        { label: t('fields.descriptionTaches'), value: values.descriptionTaches }
       ]
     },
     {
@@ -66,8 +66,8 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       title: t('stepper.step4'),
       step: 4,
       fields: [
-        { label: t('fields.resultats_attendus'), value: values.expectedResults },
-        { label: t('fields.autres_infos'), value: values.otherInfo || 'N/A' }
+        { label: t('fields.resultatsAttendus'), value: values.resultatsAttendus },
+        { label: t('fields.autres_infos'), value: values.autres_infos || 'N/A' }
       ]
     },
     {
@@ -75,15 +75,15 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       step: 5,
       fields: [
         { 
-          label: t('fields.mode_financement'), 
-          value: values.fundingMode ? t(`options.financement.${values.fundingMode}`) : ''
+          label: t('fields.mode'), 
+          value: values.mode ? t(`options.financement.${values.mode}`) : ''
         },
-        { label: t('fields.institution_financement'), value: values.fundingInstitution || 'N/A' },
-        { label: t('fields.contact_financement'), value: values.fundingContact || 'N/A' },
-        { label: t('fields.email_contact_financement'), value: values.fundingContactEmail || 'N/A' },
+        { label: t('fields.institutionFinancement'), value: values.institutionFinancement || 'N/A' },
+        { label: t('fields.contactFinancement'), value: values.contactFinancement || 'N/A' },
+        { label: t('fields.email_contactFinancement'), value: values.email_contactFinancement || 'N/A' },
         { 
-          label: t('fields.source_information'), 
-          value: values.informationSource ? t(`options.sources.${values.informationSource}`) : ''
+          label: t('fields.source'), 
+          value: values.source ? t(`options.sources.${values.source}`) : ''
         },
         { 
           label: t('fields.consentement'), 

@@ -49,33 +49,33 @@ export function Step2ProfessionalDetails() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="currentPosition">{t('fields.poste_actuel')}</Label>
+          <Label htmlFor="posteActuel">{t('fields.posteActuel')}</Label>
           <Input
-            id="currentPosition"
-            {...register('currentPosition')}
-            placeholder={t('fields.poste_actuel')}
-            className={errors.currentPosition ? 'border-destructive' : ''}
+            id="posteActuel"
+            {...register('posteActuel')}
+            placeholder={t('fields.posteActuel')}
+            className={errors.posteActuel ? 'border-destructive' : ''}
           />
-          {errors.currentPosition && (
+          {errors.posteActuel && (
             <p className="text-sm text-destructive">
-              {t(errors.currentPosition?.message as string)}
+              {t(errors.posteActuel?.message as string)}
             </p>
           )}
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="taskDescription">{t('fields.description_taches')}</Label>
+        <Label htmlFor="descriptionTaches">{t('fields.descriptionTaches')}</Label>
         <Textarea
-          id="taskDescription"
-          {...register('taskDescription')}
+          id="descriptionTaches"
+          {...register('descriptionTaches')}
           placeholder={t('placeholders.enterText')}
           rows={4}
-          className={errors.taskDescription ? 'border-destructive' : ''}
+          className={errors.descriptionTaches ? 'border-destructive' : ''}
         />
-        {errors.taskDescription && (
+        {errors.descriptionTaches && (
           <p className="text-sm text-destructive">
-            {t(errors.taskDescription?.message as string)}
+            {t(errors.descriptionTaches?.message as string)}
           </p>
         )}
       </div>

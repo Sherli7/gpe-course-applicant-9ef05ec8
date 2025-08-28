@@ -4,11 +4,11 @@ const phoneRegex = /^\+[\d\s()-]{7,}$/;
 
 export const applicationSchema = z.object({
   // Step 1: General Information
-  lastName: z.string().min(1, 'validation.required'),
-  firstName: z.string().min(1, 'validation.required'),
-  nationality: z.string().min(1, 'validation.required'),
-  gender: z.enum(['Homme', 'Femme'], { message: 'validation.required' }),
-  dateOfBirth: z.string()
+  nom: z.string().min(1, 'validation.required'),
+  prenom: z.string().min(1, 'validation.required'),
+  nationalite: z.string().min(1, 'validation.required'),
+  sexe: z.enum(['Homme', 'Femme'], { message: 'validation.required' }),
+  dateNaissance: z.string()
     .min(1, 'validation.required')
     .refine((date) => {
       const birthDate = new Date(date);
@@ -21,8 +21,8 @@ export const applicationSchema = z.object({
       }
       return age >= 18;
     }, 'validation.minAge'),
-  placeOfBirth: z.string().min(1, 'validation.required'),
-  phoneNumber: z.string()
+  lieuNaissance: z.string().min(1, 'validation.required'),
+  telephone: z.string()
     .min(1, 'validation.required')
     .regex(phoneRegex, 'validation.phone'),
   email: z.string()
@@ -32,9 +32,9 @@ export const applicationSchema = z.object({
   country: z.string().min(1, 'validation.required'),
 
   // Step 2: Professional Details
-  department: z.string().min(1, 'validation.required'),
-  currentPosition: z.string().min(1, 'validation.required'),
-  taskDescription: z.string().min(1, 'validation.required'),
+  departement: z.string().min(1, 'validation.required'),
+  posteActuel: z.string().min(1, 'validation.required'),
+  descriptionTaches: z.string().min(1, 'validation.required'),
 
   // Step 3: Education
   diploma: z.string().min(1, 'validation.required'),
@@ -44,22 +44,22 @@ export const applicationSchema = z.object({
   languageLevels: z.record(z.string(), z.string()),
 
   // Step 4: Additional Information
-  expectedResults: z.string().min(1, 'validation.required'),
-  otherInfo: z.string().optional(),
+  resultatsAttendus: z.string().min(1, 'validation.required'),
+  autres_infos: z.string().optional(),
 
   // Step 5: Funding
-  fundingMode: z.string().min(1, 'validation.required'),
-  fundingInstitution: z.string().optional().nullable(),
-  fundingContact: z.string().optional().nullable(),
-  fundingContactEmail: z.string()
+  mode: z.string().min(1, 'validation.required'),
+  institutionFinancement: z.string().optional().nullable(),
+  contactFinancement: z.string().optional().nullable(),
+  email_contactFinancement: z.string()
     .optional()
     .nullable()
     .refine(
       (email) => !email || email === '' || z.string().email().safeParse(email).success,
       'validation.email'
     ),
-  informationSource: z.string().min(1, 'validation.required'),
-  consent: z.boolean().refine((val) => val === true, 'validation.required')
+  source: z.string().min(1, 'validation.required'),
+  consentement: z.boolean().refine((val) => val === true, 'validation.required')
 }).refine((data) => {
   // Validate that every selected language has a level
   return data.languages.every((language) => data.languageLevels[language] && data.languageLevels[language].trim() !== '');
@@ -72,22 +72,22 @@ export type ApplicationFormData = z.infer<typeof applicationSchema>;
 
 // Schema for each step validation
 export const step1Schema = applicationSchema.pick({
-  lastName: true,
-  firstName: true,
-  nationality: true,
-  gender: true,
-  dateOfBirth: true,
-  placeOfBirth: true,
-  phoneNumber: true,
+  nom: true,
+  prenom: true,
+  nationalite: true,
+  sexe: true,
+  dateNaissance: true,
+  lieuNaissance: true,
+  telephone: true,
   email: true,
   organization: true,
   country: true
 });
 
 export const step2Schema = applicationSchema.pick({
-  department: true,
-  currentPosition: true,
-  taskDescription: true
+  departement: true,
+  posteActuel: true,
+  descriptionTaches: true
 });
 
 export const step3Schema = applicationSchema.pick({
@@ -104,15 +104,15 @@ export const step3Schema = applicationSchema.pick({
 });
 
 export const step4Schema = applicationSchema.pick({
-  expectedResults: true,
-  otherInfo: true
+  resultatsAttendus: true,
+  autres_infos: true
 });
 
 export const step5Schema = applicationSchema.pick({
-  fundingMode: true,
-  fundingInstitution: true,
-  fundingContact: true,
-  fundingContactEmail: true,
-  informationSource: true,
-  consent: true
+  mode: true,
+  institutionFinancement: true,
+  contactFinancement: true,
+  email_contactFinancement: true,
+  source: true,
+  consentement: true
 });

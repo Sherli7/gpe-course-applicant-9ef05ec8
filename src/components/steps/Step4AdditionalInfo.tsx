@@ -33,17 +33,17 @@ export function Step4AdditionalInfo() {
 
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="expectedResults">{t('fields.resultats_attendus')}</Label>
+          <Label htmlFor="resultatsAttendus">{t('fields.resultatsAttendus')}</Label>
           <Textarea
-            id="expectedResults"
-            {...register('expectedResults')}
+            id="resultatsAttendus"
+            {...register('resultatsAttendus')}
             placeholder={t('placeholders.enterText')}
             rows={4}
-            className={errors.expectedResults ? 'border-destructive' : ''}
+            className={errors.resultatsAttendus ? 'border-destructive' : ''}
           />
-          {errors.expectedResults && (
+          {errors.resultatsAttendus && (
             <p className="text-sm text-destructive">
-              {t(errors.expectedResults?.message as string)}
+              {t(errors.resultatsAttendus?.message as string)}
             </p>
           )}
         </div>
