@@ -136,7 +136,8 @@ export default function ApplicationForm() {
       const payload = mapFormToCandidature(data);
       console.log('[Candidature] Payload envoyé au backend:', payload);
 
-      const API_BASE = 'https://gpe-yale.edocsflow.com/api';
+      const API_BASE_PROD = 'https://gpe-yale.edocsflow.com/api';
+      const API_BASE = 'http://localhost:3000/api';
       const response = await fetch(`${API_BASE}/candidatures`, {
         method: 'POST',
         headers: {
