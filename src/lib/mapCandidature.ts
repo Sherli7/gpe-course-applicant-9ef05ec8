@@ -199,8 +199,8 @@ export function mapFormToCandidature(v: UnknownRecord): BackendCandidature {
   const nom = asString(getUnknown(v, 'lastName', 'nom')) || null;
   const nationalite = asString(getUnknown(v, 'nationality', 'nationalite')) || null;
   const sexe = normalizeGender(getUnknown(v, 'gender', 'sexe'));
-  const dateNaissance = asString(getUnknown(v, 'dateOfBirth', 'date_naissance')) || null;
-  const lieuNaissance = asString(getUnknown(v, 'placeOfBirth', 'lieu_naissance')) || null;
+  const dateNaissance = asString(getUnknown(v, 'dateOfBirth', 'dateNaissance')) || null;
+  const lieuNaissance = asString(getUnknown(v, 'placeOfBirth', 'lieuNaissance')) || null;
   const telephone = asString(getUnknown(v, 'phoneNumber', 'telephone')) || null;
   const email = asString(getUnknown(v, 'email', 'email')) || null;
   const organisation = asNullableString(getUnknown(v, 'organization', 'organisation'));
@@ -208,8 +208,8 @@ export function mapFormToCandidature(v: UnknownRecord): BackendCandidature {
 
   // ---------- Step 2 ----------
   const departement = asNullableString(getUnknown(v, 'department', 'departement'));
-  const posteActuel = asString(getUnknown(v, 'currentPosition', 'poste_actuel')) || null;
-  const descriptionTaches = asString(getUnknown(v, 'taskDescription', 'description_taches')) || null;
+  const posteActuel = asString(getUnknown(v, 'currentPosition', 'posteActuel')) || null;
+  const descriptionTaches = asString(getUnknown(v, 'taskDescription', 'descriptionTaches')) || null;
 
   // ---------- Step 3 ----------
   const diplome = asString(getUnknown(v, 'diploma', 'diplome')) || null;
@@ -224,31 +224,31 @@ export function mapFormToCandidature(v: UnknownRecord): BackendCandidature {
   });
 
   // ---------- Step 4 ----------
-  const resultatsAttendus = asString(getUnknown(v, 'expectedResults', 'resultats_attendus')) || null;
+  const resultatsAttendus = asString(getUnknown(v, 'expectedResults', 'resultatsAttendus')) || null;
   const autresInfos = asNullableString(getUnknown(v, 'otherInformation', 'autres_infos'));
 
   // ---------- Step 5 (financement) ----------
   const rawMode =
     getUnknown(v, 'fundingMode') ??
-    getUnknown(v, 'fundingSource', 'mode_financement');
+    getUnknown(v, 'fundingSource', 'mode');
   const mode = normalizeMode(rawMode);
 
   const institutionFinancement =
     mode !== 'Vous-même'
-      ? asString(getUnknown(v, 'institutionName', 'institution_financement'))
+      ? asString(getUnknown(v, 'institutionName', 'institutionFinancement'))
       : null;
 
   const contactFinancement =
     mode !== 'Vous-même'
-      ? asString(getUnknown(v, 'contactPerson', 'contact_financement'))
+      ? asString(getUnknown(v, 'contactPerson', 'contactFinancement'))
       : null;
 
   const emailContactFinancement =
     mode !== 'Vous-même'
-      ? asString(getUnknown(v, 'contactEmail', 'email_contact_financement'))
+      ? asString(getUnknown(v, 'contactEmail', 'email_contactFinancement'))
       : null;
 
-  const source = asString(getUnknown(v, 'informationSource', 'source_information')) || null;
+  const source = asString(getUnknown(v, 'informationSource', 'source')) || null;
 
   // ---------- Divers ----------
   const consentement = asBoolean(getUnknown(v, 'consent', 'consentement'));
