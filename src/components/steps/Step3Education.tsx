@@ -12,10 +12,10 @@ const hasMessage = (e: unknown): e is FieldErrorLike =>
 const LEVELS = ['Débutant', 'Intermédiaire', 'Avancé', 'Natif'] as const;
 type Level = typeof LEVELS[number];
 const DEFAULT_LEVEL: Level = 'Intermédiaire';
-const isLevel = (x: string): x is Level => LEVELS.some((l) => l === x);
+const isLevel = (x: string): x is Level => LEVELS.includes(x as Level);
 
 const normalizeLevel = (level: string): Level => {
-  if (level === 'Courant') return 'Avancé'; // compat
+  if (level === 'Courant') return 'Avancé'; // compat ancienne valeur
   return isLevel(level) ? level : DEFAULT_LEVEL;
 };
 
@@ -40,7 +40,7 @@ export function Step3Education() {
     { value: 'Anglais', label: t('options.langues.Anglais') },
   ];
 
-  // ✅ sans "Courant" (non accepté par le backend)
+  // sans "Courant" (non accepté par le backend)
   const levelOptions = [
     { value: 'Débutant',      label: t('options.niveaux.Débutant') },
     { value: 'Intermédiaire', label: t('options.niveaux.Intermédiaire') },
@@ -55,11 +55,7 @@ export function Step3Education() {
 
       const current = languageLevels[language];
       const normalized = current ? normalizeLevel(current) : DEFAULT_LEVEL;
-      setValue(
-        'languageLevels',
-        { ...languageLevels, [language]: normalized },
-        { shouldValidate: true }
-      );
+      setValue('languageLevels', { ...languageLevels, [language]: normalized }, { shouldValidate: true });
     } else {
       const newLanguages = selectedLanguages.filter((l) => l !== language);
       const newLevels = { ...languageLevels };
@@ -71,11 +67,7 @@ export function Step3Education() {
 
   const handleLevelChange = (language: string, level: string) => {
     const normalized = normalizeLevel(level);
-    setValue(
-      'languageLevels',
-      { ...languageLevels, [language]: normalized },
-      { shouldValidate: true }
-    );
+    setValue('languageLevels', { ...languageLevels, [language]: normalized }, { shouldValidate: true });
   };
 
   return (
@@ -106,16 +98,13 @@ export function Step3Education() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="diploma">{t('fields.diplome')}</Label>
-          <Label htmlFor="diploma">{t('fields.diplome')}</Label>
           <SearchableSelect
             options={diplomeOptions}
             value={values.diploma}
             onValueChange={(value) => setValue('diploma', value, { shouldValidate: true })}
             placeholder={t('fields.diplome')}
             className={errors.diploma ? 'border-destructive' : ''}
-            className={errors.diploma ? 'border-destructive' : ''}
           />
-          {errors.diploma && (
           {errors.diploma && (
             <p className="text-sm text-destructive">
               {t(hasMessage(errors.diploma) ? errors.diploma.message! : 'validation.required')}
@@ -140,20 +129,15 @@ export function Step3Education() {
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="field">{t('fields.domaine')}</Label>
-          <Label htmlFor="field">{t('fields.domaine')}</Label>
           <Input
-            id="field"
-            {...register('field')}
             id="field"
             {...register('field')}
             placeholder={t('fields.domaine')}
             className={errors.field ? 'border-destructive' : ''}
-            className={errors.field ? 'border-destructive' : ''}
           />
           {errors.field && (
-          {errors.field && (
             <p className="text-sm text-destructive">
-              {t(errors.domaine?.message as string)}
+              {t(hasMessage(errors.field) ? errors.field.message! : 'validation.required')}
             </p>
           )}
         </div>
@@ -200,12 +184,12 @@ export function Step3Education() {
 
         {errors.languages && (
           <p className="text-sm text-destructive">
-            {t(errors.langues?.message as string)}
+            {t(hasMessage(errors.languages) ? errors.languages.message! : 'validation.required')}
           </p>
         )}
         {errors.languageLevels && (
           <p className="text-sm text-destructive">
-            {t(errors.niveaux?.message as string)}
+            {t(hasMessage(errors.languageLevels) ? errors.languageLevels.message! : 'validation.required')}
           </p>
         )}
       </div>
