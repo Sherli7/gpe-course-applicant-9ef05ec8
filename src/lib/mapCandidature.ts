@@ -5,7 +5,7 @@ export type CandidaturePayload = {
   lastName: string;
   nationality: string;
   gender: string;
-  dateOfBirth: string;               // 'YYYY-MM-DD'
+  dateOfBirth: string; // 'YYYY-MM-DD'
   placeOfBirth: string;
   phoneNumber: string;
   email: string;
@@ -25,7 +25,7 @@ export type CandidaturePayload = {
   expectedResults: string;
   otherInformation: string | null;
 
-  fundingSource: string[];           // array obligatoire
+  fundingSource: string[]; // array obligatoire
   institutionName: string | null;
   contactPerson: string | null;
   contactEmail: string | null;
@@ -34,61 +34,100 @@ export type CandidaturePayload = {
   consent: boolean;
 };
 
-type AnyObj = Record<string, any>;
+type UnknownRecord = Record<string, unknown>;
 
-// Utilitaire: lit d’abord la clé EN, sinon la FR
-const get = (obj: AnyObj, en: string, fr?: string) =>
-  obj?.[en] ?? (fr ? obj?.[fr] : undefined);
+// --- Helpers de typage sûrs (pas de any) ---
+const pick = (obj: UnknownRecord, key: string): unknown =>
+  Object.prototype.hasOwnProperty.call(obj, key) ? obj[key] : undefined;
+
+const getUnknown = (
+  obj: UnknownRecord,
+  en: string,
+  fr?: string
+): unknown => {
+  const enVal = pick(obj, en);
+  if (enVal !== undefined) return enVal;
+  return fr ? pick(obj, fr) : undefined;
+};
+
+const asString = (v: unknown, fallback = ''): string =>
+  typeof v === 'string' ? v : fallback;
+
+const asNullableString = (v: unknown): string | null =>
+  typeof v === 'string' && v.trim() !== '' ? v : null;
+
+const asStringArray = (v: unknown, fallback: string[] = []): string[] =>
+  Array.isArray(v) && v.every((x) => typeof x === 'string') ? (v as string[]) : fallback;
+
+const asRecordStringString = (
+  v: unknown,
+  fallback: Record<string, string> = {}
+): Record<string, string> => {
+  if (v && typeof v === 'object' && !Array.isArray(v)) {
+    const entries = Object.entries(v as Record<string, unknown>).filter(
+      ([k, val]) => typeof k === 'string' && typeof val === 'string'
+    ) as [string, string][];
+    return Object.fromEntries(entries);
+  }
+  return fallback;
+};
+
+const asBoolean = (v: unknown): boolean =>
+  typeof v === 'boolean' ? v : Boolean(v);
+
+// ----------------------------------------------------
 
 /**
  * Transforme les valeurs du form (FR ou EN) vers le payload attendu par le backend.
  */
-export function mapFormToCandidature(v: AnyObj): CandidaturePayload {
-  const fundingOne = get(v, 'fundingSource', 'mode_financement');
-  const fundingSource: string[] = Array.isArray(fundingOne)
-    ? fundingOne
-    : (fundingOne ? [fundingOne] : []);
+export function mapFormToCandidature(v: UnknownRecord): CandidaturePayload {
+  // fundingSource: string | string[] -> string[]
+  const fundingRaw = getUnknown(v, 'fundingSource', 'mode_financement');
+  const fundingSource =
+    Array.isArray(fundingRaw)
+      ? asStringArray(fundingRaw)
+      : (typeof fundingRaw === 'string' && fundingRaw ? [fundingRaw] : []);
 
   return {
     // Step 1
-    firstName: get(v, 'firstName', 'prenom') ?? '',
-    lastName: get(v, 'lastName', 'nom') ?? '',
-    nationality: get(v, 'nationality', 'nationalite') ?? '',
-    gender: get(v, 'gender', 'sexe') ?? '',
-    dateOfBirth: get(v, 'dateOfBirth', 'date_naissance') ?? '',
-    placeOfBirth: get(v, 'placeOfBirth', 'lieu_naissance') ?? '',
-    phoneNumber: get(v, 'phoneNumber', 'telephone') ?? '',
-    email: get(v, 'email', 'email') ?? '',
-    organization: get(v, 'organization', 'organisation') ?? null,
-    country: get(v, 'country', 'pays') ?? '',
+    firstName: asString(getUnknown(v, 'firstName', 'prenom')),
+    lastName: asString(getUnknown(v, 'lastName', 'nom')),
+    nationality: asString(getUnknown(v, 'nationality', 'nationalite')),
+    gender: asString(getUnknown(v, 'gender', 'sexe')),
+    dateOfBirth: asString(getUnknown(v, 'dateOfBirth', 'date_naissance')),
+    placeOfBirth: asString(getUnknown(v, 'placeOfBirth', 'lieu_naissance')),
+    phoneNumber: asString(getUnknown(v, 'phoneNumber', 'telephone')),
+    email: asString(getUnknown(v, 'email', 'email')),
+    organization: asNullableString(getUnknown(v, 'organization', 'organisation')),
+    country: asString(getUnknown(v, 'country', 'pays')),
 
     // Step 2
-    department: get(v, 'department', 'departement') ?? null,
-    currentPosition: get(v, 'currentPosition', 'poste_actuel') ?? '',
-    taskDescription: get(v, 'taskDescription', 'description_taches') ?? '',
+    department: asNullableString(getUnknown(v, 'department', 'departement')),
+    currentPosition: asString(getUnknown(v, 'currentPosition', 'poste_actuel')),
+    taskDescription: asString(getUnknown(v, 'taskDescription', 'description_taches')),
 
     // Step 3
-    diploma: get(v, 'diploma', 'diplome') ?? '',
-    institution: get(v, 'institution', 'institution') ?? '',
-    field: get(v, 'field', 'domaine') ?? '',
-    languages: get(v, 'languages', 'langues') ?? [],
-    languageLevels: get(v, 'languageLevels', 'niveaux') ?? {},
+    diploma: asString(getUnknown(v, 'diploma', 'diplome')),
+    institution: asString(getUnknown(v, 'institution', 'institution')),
+    field: asString(getUnknown(v, 'field', 'domaine')),
+    languages: asStringArray(getUnknown(v, 'languages', 'langues')),
+    languageLevels: asRecordStringString(getUnknown(v, 'languageLevels', 'niveaux')),
 
     // Step 4
-    expectedResults: get(v, 'expectedResults', 'resultats_attendus') ?? '',
-    otherInformation: get(v, 'otherInformation', 'autres_infos') ?? null,
+    expectedResults: asString(getUnknown(v, 'expectedResults', 'resultats_attendus')),
+    otherInformation: asNullableString(getUnknown(v, 'otherInformation', 'autres_infos')),
 
     // Step 5
     fundingSource,
-    institutionName: get(v, 'institutionName', 'institution_financement') ?? null,
-    contactPerson: get(v, 'contactPerson', 'contact_financement') ?? null,
-    contactEmail: get(v, 'contactEmail', 'email_contact_financement') ?? null,
-    informationSource: get(v, 'informationSource', 'source_information') ?? '',
+    institutionName: asNullableString(getUnknown(v, 'institutionName', 'institution_financement')),
+    contactPerson: asNullableString(getUnknown(v, 'contactPerson', 'contact_financement')),
+    contactEmail: asNullableString(getUnknown(v, 'contactEmail', 'email_contact_financement')),
+    informationSource: asString(getUnknown(v, 'informationSource', 'source_information')),
 
     // Divers
-    consent: !!(get(v, 'consent', 'consentement')),
+    consent: asBoolean(getUnknown(v, 'consent', 'consentement')),
   };
 }
 
-// (facultatif) si tu veux aussi permettre l’import par défaut
+// (facultatif) export par défaut pour autoriser `import mapFormToCandidature from '...'`
 export default mapFormToCandidature;
