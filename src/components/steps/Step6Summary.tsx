@@ -20,9 +20,9 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
   };
 
   const formatLanguages = () => {
-    const { langues = [], niveaux = {} } = values;
-    return langues.map((lang: string) => 
-      `${lang} (${niveaux[lang] || 'N/A'})`
+    const { languages = [], languageLevels = {} } = values;
+    return languages.map((lang: string) => 
+      `${lang} (${languageLevels[lang] || 'N/A'})`
     ).join(', ');
   };
 
@@ -39,8 +39,8 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
         { label: t('fields.lieuNaissance'), value: values.lieuNaissance },
         { label: t('fields.telephone'), value: values.telephone },
         { label: t('fields.email'), value: values.email },
-        { label: t('fields.organisation'), value: values.organisation },
-        { label: t('fields.pays'), value: values.pays }
+        { label: t('fields.organisation'), value: values.organization },
+        { label: t('fields.pays'), value: values.country }
       ]
     },
     {
@@ -50,15 +50,17 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
         { label: t('fields.departement'), value: values.departement },
         { label: t('fields.posteActuel'), value: values.posteActuel },
         { label: t('fields.descriptionTaches'), value: values.descriptionTaches }
+        { label: t('fields.posteActuel'), value: values.posteActuel },
+        { label: t('fields.descriptionTaches'), value: values.descriptionTaches }
       ]
     },
     {
       title: t('stepper.step3'),
       step: 3,
       fields: [
-        { label: t('fields.diplome'), value: values.diplome ? t(`options.diplomes.${values.diplome}`) : '' },
+        { label: t('fields.diplome'), value: values.diploma ? t(`options.diplomes.${values.diploma}`) : '' },
         { label: t('fields.institution'), value: values.institution },
-        { label: t('fields.domaine'), value: values.domaine },
+        { label: t('fields.domaine'), value: values.field },
         { label: t('fields.langues'), value: formatLanguages() }
       ]
     },
@@ -84,10 +86,12 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
         { 
           label: t('fields.source'), 
           value: values.source ? t(`options.sources.${values.source}`) : ''
+          label: t('fields.source'), 
+          value: values.source ? t(`options.sources.${values.source}`) : ''
         },
         { 
           label: t('fields.consentement'), 
-          value: values.consentement ? 'Oui' : 'Non'
+          value: values.consent ? 'Oui' : 'Non'
         }
       ]
     }

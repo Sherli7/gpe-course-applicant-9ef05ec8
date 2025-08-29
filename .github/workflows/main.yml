@@ -1,0 +1,31 @@
+name: Repository Pull Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run_pull:
+    name: Run pull
+    runs-on: ubuntu-latest  # Use self-hosted runner instead of ubuntu-latest
+    steps:
+      - name: install ssh key
+        run: |
+          mkdir -p ~/.ssh
+          touch ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+
+      - name: configure ssh host
+        run: |
+          echo "${{ secrets.SSH_HOST }} $(ssh-keyscan -t rsa ${{ secrets.SSH_HOST }} 2>/dev/null)" > ~/.ssh/known_hosts || echo "Host key scan failed, proceeding with empty known_hosts"
+
+      - name: connect and pull
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull" || echo "SSH or Git command failed"
+
+      - name: cleanup
+        run: |
+          rm -rf ~/.ssh/id_rsa
+          rm -rf ~/.ssh/known_hosts

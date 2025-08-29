@@ -34,16 +34,16 @@ export function Step2ProfessionalDetails() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="departement">{t('fields.departement')}</Label>
+          <Label htmlFor="department">{t('fields.departement')}</Label>
           <Input
-            id="departement"
-            {...register('departement')}
+            id="department"
+            {...register('department')}
             placeholder={t('fields.departement')}
-            className={errors.departement ? 'border-destructive' : ''}
+            className={errors.department ? 'border-destructive' : ''}
           />
-          {errors.departement && (
+          {errors.department && (
             <p className="text-sm text-destructive">
-              {t(errors.departement?.message as string)}
+              {t(errors.department?.message as string)}
             </p>
           )}
         </div>
