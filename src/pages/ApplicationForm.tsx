@@ -123,7 +123,8 @@ export default function ApplicationForm() {
     setIsSubmitting(true);
     
     try {
-      const API_BASE = 'https://gpe-yale.edocsflow.com/api';
+      const API_BASEs = 'https://gpe-yale.edocsflow.com/api';
+      const API_BASE = 'http://localhost:3000/api';
       const response = await fetch(`${API_BASE}/candidatures`, {
         method: 'POST',
         headers: {

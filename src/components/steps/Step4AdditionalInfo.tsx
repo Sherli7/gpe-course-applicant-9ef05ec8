@@ -33,36 +33,36 @@ export function Step4AdditionalInfo() {
 
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="resultats_attendus">{t('fields.resultats_attendus')}</Label>
+          <Label htmlFor="resultatsAttendus">{t('fields.resultatsAttendus')}</Label>
           <Textarea
-            id="resultats_attendus"
-            {...register('resultats_attendus')}
+            id="resultatsAttendus"
+            {...register('resultatsAttendus')}
             placeholder={t('placeholders.enterText')}
             rows={4}
-            className={errors.resultats_attendus ? 'border-destructive' : ''}
+            className={errors.resultatsAttendus ? 'border-destructive' : ''}
           />
-          {errors.resultats_attendus && (
+          {errors.resultatsAttendus && (
             <p className="text-sm text-destructive">
-              {t(errors.resultats_attendus?.message as string)}
+              {t(errors.resultatsAttendus?.message as string)}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="autres_infos">
-            {t('fields.autres_infos')} 
+          <Label htmlFor="autresInfos">
+            {t('fields.autresInfos')} 
             <span className="text-muted-foreground ml-1">(optionnel)</span>
           </Label>
           <Textarea
-            id="autres_infos"
-            {...register('autres_infos')}
+            id="autresInfos"
+            {...register('autresInfos')}
             placeholder={t('placeholders.enterText')}
             rows={4}
-            className={errors.autres_infos ? 'border-destructive' : ''}
+            className={errors.autresInfos ? 'border-destructive' : ''}
           />
-          {errors.autres_infos && (
+          {errors.autresInfos && (
             <p className="text-sm text-destructive">
-              {t(errors.autres_infos?.message as string)}
+              {t(errors.autresInfos?.message as string)}
             </p>
           )}
         </div>

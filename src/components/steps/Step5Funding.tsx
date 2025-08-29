@@ -11,7 +11,7 @@ export function Step5Funding() {
   const { register, setValue, watch, formState: { errors } } = useFormContext();
   
   const values = watch();
-  const fundingMethod = values.mode_financement;
+  const fundingMethod = values.modeFinancement;
   const needsFundingDetails = fundingMethod && fundingMethod !== 'Vous-même';
 
   const fundingOptions = [
@@ -56,10 +56,10 @@ export function Step5Funding() {
 
       <div className="space-y-6">
         <div className="space-y-4">
-          <Label className="text-base font-medium">{t('fields.mode_financement')}</Label>
+          <Label className="text-base font-medium">{t('fields.modeFinancement')}</Label>
           <RadioGroup 
             value={fundingMethod} 
-            onValueChange={(value) => setValue('mode_financement', value)}
+            onValueChange={(value) => setValue('modeFinancement', value)}
           >
             {fundingOptions.map((option) => (
               <div key={option.value} className="flex items-center space-x-2">
@@ -70,9 +70,9 @@ export function Step5Funding() {
               </div>
             ))}
           </RadioGroup>
-          {errors.mode_financement && (
+          {errors.modeFinancement && (
             <p className="text-sm text-destructive">
-              {t(errors.mode_financement?.message as string)}
+              {t(errors.modeFinancement?.message as string)}
             </p>
           )}
         </div>
@@ -80,56 +80,56 @@ export function Step5Funding() {
         {needsFundingDetails && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-lg bg-muted/20">
             <div className="space-y-2">
-              <Label htmlFor="institution_financement">
-                {t('fields.institution_financement')}
+              <Label htmlFor="institutionFinancement">
+                {t('fields.institutionFinancement')}
                 <span className="text-muted-foreground ml-1">(optionnel)</span>
               </Label>
               <Input
-                id="institution_financement"
-                {...register('institution_financement')}
-                placeholder={t('fields.institution_financement')}
-                className={errors.institution_financement ? 'border-destructive' : ''}
+                id="institutionFinancement"
+                {...register('institutionFinancement')}
+                placeholder={t('fields.institutionFinancement')}
+                className={errors.institutionFinancement ? 'border-destructive' : ''}
               />
-              {errors.institution_financement && (
+              {errors.institutionFinancement && (
                 <p className="text-sm text-destructive">
-                  {t(errors.institution_financement?.message as string)}
+                  {t(errors.institutionFinancement?.message as string)}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="contact_financement">
-                {t('fields.contact_financement')}
+              <Label htmlFor="contactFinancement">
+                {t('fields.contactFinancement')}
                 <span className="text-muted-foreground ml-1">(optionnel)</span>
               </Label>
               <Input
-                id="contact_financement"
-                {...register('contact_financement')}
-                placeholder={t('fields.contact_financement')}
-                className={errors.contact_financement ? 'border-destructive' : ''}
+                id="contactFinancement"
+                {...register('contactFinancement')}
+                placeholder={t('fields.contactFinancement')}
+                className={errors.contactFinancement ? 'border-destructive' : ''}
               />
-              {errors.contact_financement && (
+              {errors.contactFinancement && (
                 <p className="text-sm text-destructive">
-                  {t(errors.contact_financement?.message as string)}
+                  {t(errors.contactFinancement?.message as string)}
                 </p>
               )}
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="email_contact_financement">
-                {t('fields.email_contact_financement')}
+              <Label htmlFor="emailContactFinancement">
+                {t('fields.emailContactFinancement')}
                 <span className="text-muted-foreground ml-1">(optionnel)</span>
               </Label>
               <Input
-                id="email_contact_financement"
+                id="emailContactFinancement"
                 type="email"
-                {...register('email_contact_financement')}
+                {...register('emailContactFinancement')}
                 placeholder="contact@organisation.com"
-                className={errors.email_contact_financement ? 'border-destructive' : ''}
+                className={errors.emailContactFinancement ? 'border-destructive' : ''}
               />
-              {errors.email_contact_financement && (
+              {errors.emailContactFinancement && (
                 <p className="text-sm text-destructive">
-                  {t(errors.email_contact_financement?.message as string)}
+                  {t(errors.emailContactFinancement?.message as string)}
                 </p>
               )}
             </div>
@@ -137,17 +137,17 @@ export function Step5Funding() {
         )}
 
         <div className="space-y-2">
-          <Label htmlFor="source_information">{t('fields.source_information')}</Label>
+          <Label htmlFor="source">{t('fields.source')}</Label>
           <SearchableSelect
             options={sourceOptions}
-            value={values.source_information}
-            onValueChange={(value) => setValue('source_information', value)}
-            placeholder={t('fields.source_information')}
-            className={errors.source_information ? 'border-destructive' : ''}
+            value={values.source}
+            onValueChange={(value) => setValue('source', value)}
+            placeholder={t('fields.source')}
+            className={errors.source ? 'border-destructive' : ''}
           />
-          {errors.source_information && (
+          {errors.source && (
             <p className="text-sm text-destructive">
-              {t(errors.source_information?.message as string)}
+              {t(errors.source?.message as string)}
             </p>
           )}
         </div>

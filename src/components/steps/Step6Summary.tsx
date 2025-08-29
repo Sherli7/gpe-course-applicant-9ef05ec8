@@ -35,8 +35,8 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
         { label: t('fields.prenom'), value: values.prenom },
         { label: t('fields.nationalite'), value: values.nationalite },
         { label: t('fields.sexe'), value: values.sexe ? t(`options.sexe.${values.sexe}`) : '' },
-        { label: t('fields.date_naissance'), value: formatDate(values.date_naissance) },
-        { label: t('fields.lieu_naissance'), value: values.lieu_naissance },
+        { label: t('fields.dateNaissance'), value: formatDate(values.dateNaissance) },
+        { label: t('fields.lieuNaissance'), value: values.lieuNaissance },
         { label: t('fields.telephone'), value: values.telephone },
         { label: t('fields.email'), value: values.email },
         { label: t('fields.organisation'), value: values.organisation },
@@ -48,8 +48,8 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       step: 2,
       fields: [
         { label: t('fields.departement'), value: values.departement },
-        { label: t('fields.poste_actuel'), value: values.poste_actuel },
-        { label: t('fields.description_taches'), value: values.description_taches }
+        { label: t('fields.posteActuel'), value: values.posteActuel },
+        { label: t('fields.descriptionTaches'), value: values.descriptionTaches }
       ]
     },
     {
@@ -66,8 +66,8 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       title: t('stepper.step4'),
       step: 4,
       fields: [
-        { label: t('fields.resultats_attendus'), value: values.resultats_attendus },
-        { label: t('fields.autres_infos'), value: values.autres_infos || 'N/A' }
+        { label: t('fields.resultatsAttendus'), value: values.resultatsAttendus },
+        { label: t('fields.autresInfos'), value: values.autresInfos || 'N/A' }
       ]
     },
     {
@@ -75,15 +75,15 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       step: 5,
       fields: [
         { 
-          label: t('fields.mode_financement'), 
-          value: values.mode_financement ? t(`options.financement.${values.mode_financement}`) : ''
+          label: t('fields.modeFinancement'), 
+          value: values.modeFinancement ? t(`options.financement.${values.modeFinancement}`) : ''
         },
-        { label: t('fields.institution_financement'), value: values.institution_financement || 'N/A' },
-        { label: t('fields.contact_financement'), value: values.contact_financement || 'N/A' },
-        { label: t('fields.email_contact_financement'), value: values.email_contact_financement || 'N/A' },
+        { label: t('fields.institutionFinancement'), value: values.institutionFinancement || 'N/A' },
+        { label: t('fields.contactFinancement'), value: values.contactFinancement || 'N/A' },
+        { label: t('fields.emailContactFinancement'), value: values.emailContactFinancement || 'N/A' },
         { 
-          label: t('fields.source_information'), 
-          value: values.source_information ? t(`options.sources.${values.source_information}`) : ''
+          label: t('fields.source'), 
+          value: values.source ? t(`options.sources.${values.source}`) : ''
         },
         { 
           label: t('fields.consentement'), 

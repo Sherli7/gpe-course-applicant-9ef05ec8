@@ -123,34 +123,34 @@ export function Step1GeneralInfo() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="date_naissance">{t('fields.date_naissance')}</Label>
+          <Label htmlFor="dateNaissance">{t('fields.dateNaissance')}</Label>
           <Input
-            id="date_naissance"
+            id="dateNaissance"
             type="date"
-            {...register('date_naissance')}
-            className={errors.date_naissance ? 'border-destructive' : ''}
+            {...register('dateNaissance')}
+            className={errors.dateNaissance ? 'border-destructive' : ''}
           />
-          {errors.date_naissance && (
+          {errors.dateNaissance && (
             <p className="text-sm text-destructive">
-              {t(errors.date_naissance?.message as string)}
+              {t(errors.dateNaissance?.message as string)}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="lieu_naissance">{t('fields.lieu_naissance')}</Label>
+          <Label htmlFor="lieuNaissance">{t('fields.lieuNaissance')}</Label>
           <SearchableSelect
             options={countryOptions}
-            value={values.lieu_naissance}
-            onValueChange={(value) => setValue('lieu_naissance', value)}
-            placeholder={t('fields.lieu_naissance')}
+            value={values.lieuNaissance}
+            onValueChange={(value) => setValue('lieuNaissance', value)}
+            placeholder={t('fields.lieuNaissance')}
             searchPlaceholder={t('placeholders.searchCountry')}
             groupSeparators={separators}
-            className={errors.lieu_naissance ? 'border-destructive' : ''}
+            className={errors.lieuNaissance ? 'border-destructive' : ''}
           />
-          {errors.lieu_naissance && (
+          {errors.lieuNaissance && (
             <p className="text-sm text-destructive">
-              {t(errors.lieu_naissance?.message as string)}
+              {t(errors.lieuNaissance?.message as string)}
             </p>
           )}
         </div>
