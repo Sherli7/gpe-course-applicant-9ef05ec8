@@ -161,7 +161,7 @@ export default function ApplicationForm() {
         body: JSON.stringify(data)
       });
 
-      const resultUnknown: unknown = await resp.json().catch(() => ({}));
+      const resultUnknown: unknown = await response.json().catch(() => ({}));
 
       if (hasBooleanSuccess(resultUnknown) && resultUnknown.success === true) {
         localStorage.removeItem(DRAFT_STORAGE_KEY);
@@ -177,7 +177,7 @@ export default function ApplicationForm() {
         const message =
           (isRecord(resultUnknown) && typeof resultUnknown.message === 'string'
             ? resultUnknown.message
-            : resp.statusText) || 'Submission failed';
+            : response.statusText) || 'Submission failed';
 
         const details =
           isRecord(resultUnknown) && Array.isArray(resultUnknown.details)
