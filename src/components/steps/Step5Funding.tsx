@@ -154,12 +154,12 @@ export function Step5Funding() {
 
         <div className="flex items-start space-x-2 p-4 border rounded-lg">
           <Checkbox
-            id="consent"
-            checked={values.consent}
-            onCheckedChange={(checked) => setValue('consent', checked)}
+            id="consentement"
+            checked={values.consentement}
+            onCheckedChange={(checked) => setValue('consentement', checked)}
           />
           <div className="space-y-1">
-            <Label htmlFor="consent" className="text-sm font-normal cursor-pointer">
+            <Label htmlFor="consentement" className="text-sm font-normal cursor-pointer">
               {t('fields.consentement')}
             </Label>
             <p className="text-xs text-muted-foreground">
@@ -168,9 +168,9 @@ export function Step5Funding() {
             </p>
           </div>
         </div>
-        {errors.consent && (
+        {errors.consentement && (
           <p className="text-sm text-destructive">
-            {t(errors.consent?.message as string)}
+            {t(errors.consentement?.message as string)}
           </p>
         )}
       </div>
