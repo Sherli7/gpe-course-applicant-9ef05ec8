@@ -71,14 +71,14 @@ export function Step5Funding() {
         {needsFundingDetails && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-lg bg-muted/20">
             <div className="space-y-2">
-              <Label htmlFor="institutionFinancementFinancement">
-                {t('fields.institutionFinancementFinancement')} <span className="text-muted-foreground ml-1">(optionnel)</span>
+              <Label htmlFor="institutionFinancement">
+                {t('fields.institutionFinancement')} <span className="text-muted-foreground ml-1">(optionnel)</span>
               </Label>
-              <Input id="institutionFinancementFinancement" {...register('institutionFinancementFinancement')}
-                     placeholder={t('fields.institutionFinancementFinancement')}
-                     className={errors.institutionFinancementFinancement ? 'border-destructive' : ''} />
-              {errors.institutionFinancementFinancement?.message && (
-                <p className="text-sm text-destructive">{t(errors.institutionFinancementFinancement.message)}</p>
+              <Input id="institutionFinancement" {...register('institutionFinancement')}
+                     placeholder={t('fields.institutionFinancement')}
+                     className={errors.institutionFinancement ? 'border-destructive' : ''} />
+              {errors.institutionFinancement?.message && (
+                <p className="text-sm text-destructive">{t(errors.institutionFinancement.message)}</p>
               )}
             </div>
 
