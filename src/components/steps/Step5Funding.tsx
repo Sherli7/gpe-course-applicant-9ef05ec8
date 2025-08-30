@@ -110,7 +110,6 @@ export function Step5Funding() {
 
         <div className="space-y-2">
           <Label htmlFor="source">{t('fields.source')}</Label>
-          <Label htmlFor="source">{t('fields.source')}</Label>
           <SearchableSelect
             options={sourceOptions}
             value={values.source}
@@ -128,7 +127,6 @@ export function Step5Funding() {
             onCheckedChange={(checked) => setValue('consentement', checked === true, { shouldValidate: true })}
           />
           <div className="space-y-1">
-            <Label htmlFor="consentement" className="text-sm font-normal cursor-pointer">
             <Label htmlFor="consentement" className="text-sm font-normal cursor-pointer">
               {t('fields.consentement')}
             </Label>
