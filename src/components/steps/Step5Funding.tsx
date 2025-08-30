@@ -19,7 +19,7 @@ export function Step5Funding() {
 
   const fundingOptions = [
     { value: 'Vous-même', label: t('options.financement.Vous-même') },
-    { value: 'institutionFinancement', label: t('options.financement.institutionFinancement') },
+    { value: 'Institution', label: t('options.financement.Institution') },
     { value: 'Autre', label: t('options.financement.Autre') },
   ];
 
@@ -109,6 +109,7 @@ export function Step5Funding() {
         )}
 
         <div className="space-y-2">
+          <Label htmlFor="source">{t('fields.source')}</Label>
           <Label htmlFor="source">{t('fields.source')}</Label>
           <SearchableSelect
             options={sourceOptions}
