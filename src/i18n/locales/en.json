@@ -38,14 +38,14 @@
     "descriptionTaches": "Job Description",
     "posteActuel": "Current Position",
     "diplome": "Highest Degree",
-    "institutionFinancement": "institutionFinancement",
+    "institution": "Institution",
     "domaine": "Field of Study",
     "langues": "Languages Spoken",
     "niveaux": "Proficiency Level",
     "resultatsAttendus": "Expected Results", 
     "autresInfos": "Additional Information",
     "mode": "Funding Method",
-    "institutionFinancementFinancement": "Funding institutionFinancement",
+    "institutionFinancement": "Funding Institution",
     "contactFinancement": "Funding Contact",
     "emailContactFinancement": "Contact Email",
     "source": "How did you hear about us?",
@@ -82,7 +82,7 @@
     },
     "financement": {
       "Vous-même": "Self-funded",
-      "institutionFinancement": "institutionFinancement",
+      "Institution": "Institution",
       "Autre": "Other"
     },
     "sources": {

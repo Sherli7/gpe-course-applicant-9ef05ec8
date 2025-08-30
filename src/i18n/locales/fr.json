@@ -38,14 +38,14 @@
     "descriptionTaches": "Description des tâches",
     "posteActuel": "Poste actuel",
     "diplome": "Diplôme le plus élevé",
-    "institutionFinancement": "institutionFinancement",
+    "institution": "Institution",
     "domaine": "Domaine d'études",
     "langues": "Langues parlées",
     "niveaux": "Niveau de maîtrise",
     "resultatsAttendus": "Résultats attendus",
     "autresInfos": "Autres informations",
     "mode": "Mode de financement",
-    "institutionFinancementFinancement": "institutionFinancement de financement",
+    "institutionFinancement": "Institution de financement",
     "contactFinancement": "Contact de financement", 
     "emailContactFinancement": "Email du contact",
     "source": "Comment avez-vous entendu parler de nous ?",
@@ -82,7 +82,7 @@
     },
     "financement": {
       "Vous-même": "Vous-même",
-      "institutionFinancement": "institutionFinancement",
+      "Institution": "Institution",
       "Autre": "Autre"
     },
     "sources": {
