@@ -8,7 +8,7 @@ export type Sexe = typeof SEXES[number];
 export const LEVELS = ['Débutant', 'Intermédiaire', 'Avancé', 'Natif'] as const;
 export type Level = typeof LEVELS[number];
 
-export const FUNDING = ['Vous-même', 'Institution', 'Autre'] as const;
+export const FUNDING = ['Vous-même', 'institutionFinancement', 'Autre'] as const;
 export type Mode = typeof FUNDING[number];
 
 export const applicationSchema = z.object({
@@ -39,7 +39,7 @@ export const applicationSchema = z.object({
 
   // Étape 3 — Éducation & langues
   diplome: z.string().max(50, 'validation.maxLength').min(1, 'validation.required'),
-  institution: z.string().max(200, 'validation.maxLength').min(1, 'validation.required'),
+  institutionFinancement: z.string().max(200, 'validation.maxLength').min(1, 'validation.required'),
   domaine: z.string().max(100, 'validation.maxLength').min(1, 'validation.required'),
   langues: z.array(z.string().max(50, 'validation.maxLength')).min(1, 'validation.required'),
   niveaux: z.record(z.string().max(50, 'validation.maxLength'), z.enum(LEVELS)).default({}),
@@ -50,7 +50,7 @@ export const applicationSchema = z.object({
 
   // Étape 5 — Financement
   mode: z.enum(FUNDING, { message: 'validation.required' }),
-  institutionFinancement: z.string().max(200, 'validation.maxLength').optional().nullable().default(''),
+  institutionFinancementFinancement: z.string().max(200, 'validation.maxLength').optional().nullable().default(''),
   contactFinancement: z.string().max(100, 'validation.maxLength').optional().nullable().default(''),
   emailContactFinancement: z
     .string()
@@ -69,7 +69,7 @@ export const applicationSchema = z.object({
 .refine(
   (data) => {
     if (data.mode !== 'Vous-même') {
-      return !!(data.institutionFinancement && data.contactFinancement && data.emailContactFinancement);
+      return !!(data.institutionFinancementFinancement && data.contactFinancement && data.emailContactFinancement);
     }
     return true;
   },
@@ -90,7 +90,7 @@ export const step2Schema = applicationSchema.pick({
 });
 
 export const step3Schema = applicationSchema.pick({
-  diplome: true, institution: true, domaine: true, langues: true, niveaux: true,
+  diplome: true, institutionFinancement: true, domaine: true, langues: true, niveaux: true,
 }).refine(
   (data) => data.langues.every((l) => typeof data.niveaux[l] === 'string' && (data.niveaux[l] as string).trim() !== ''),
   { message: 'validation.languageLevel', path: ['niveaux'] }
@@ -102,7 +102,7 @@ export const step4Schema = applicationSchema.pick({
 
 export const step5Schema = applicationSchema.pick({
   mode: true,
-  institutionFinancement: true,
+  institutionFinancementFinancement: true,
   contactFinancement: true,
   emailContactFinancement: true,
   source: true,

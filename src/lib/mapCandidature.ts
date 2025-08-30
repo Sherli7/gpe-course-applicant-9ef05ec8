@@ -18,7 +18,7 @@ export type CandidaturePayload = {
   taskDescription: string;
 
   diploma: string;
-  institution: string;
+  institutionFinancement: string;
   field: string;
   languages: string[];
   languageLevels: Record<string, string>;
@@ -27,7 +27,7 @@ export type CandidaturePayload = {
   otherInformation: string | null;
 
   fundingSource: string[]; // ancien front: tableau
-  institutionName: string | null;
+  institutionFinancementName: string | null;
   contactPerson: string | null;
   contactEmail: string | null;
 
@@ -39,7 +39,7 @@ export type CandidaturePayload = {
 const LEVELS = ['Débutant', 'Intermédiaire', 'Avancé', 'Natif'] as const;
 export type AllowedLevel = typeof LEVELS[number];
 
-const MODES = ['Vous-même', 'Institution', 'Autre'] as const;
+const MODES = ['Vous-même', 'institutionFinancement', 'Autre'] as const;
 export type Mode = typeof MODES[number];
 
 const GENDERS = ['Homme', 'Femme', 'Autre'] as const;
@@ -62,7 +62,7 @@ export type BackendCandidature = {
   descriptionTaches: string | null;
 
   diplome: string | null;
-  institution: string | null;
+  institutionFinancement: string | null;
   domaine: string | null;
 
   langues: string[];
@@ -72,7 +72,7 @@ export type BackendCandidature = {
   autresInfos: string | null;
 
   mode: Mode;
-  institutionFinancement: string | null;
+  institutionFinancementFinancement: string | null;
   contactFinancement: string | null;
   emailContactFinancement: string | null;
 
@@ -155,7 +155,7 @@ const normalizeGender = (raw: unknown): Gender | null => {
   return v ? 'Autre' : null;
 };
 
-/** Mappe anciens choix (tableau, libellés variés) -> {Vous-même|Institution|Autre} */
+/** Mappe anciens choix (tableau, libellés variés) -> {Vous-même|institutionFinancement|Autre} */
 export const normalizeMode = (raw: unknown): Mode => {
   if (Array.isArray(raw)) {
     if (raw.length === 0) return 'Vous-même';
@@ -163,14 +163,14 @@ export const normalizeMode = (raw: unknown): Mode => {
       String(x).trim().toLowerCase()
     );
     const set = new Set<string>(lowered);
-    if (set.has('institution')) return 'Institution';
+    if (set.has('institutionFinancement')) return 'institutionFinancement';
     if (set.has('autre') || set.has('other')) return 'Autre';
     if (set.has('vous-même') || set.has('vous-meme') || set.has('self') || set.has('self-funded')) {
       return 'Vous-même';
     }
     if (['employeur', 'sponsor', 'bourse', 'organisme', 'entreprise', 'organisme public']
       .some((k) => set.has(k))) {
-      return 'Institution';
+      return 'institutionFinancement';
     }
     return 'Autre';
   }
@@ -180,8 +180,8 @@ export const normalizeMode = (raw: unknown): Mode => {
   if (['self', 'self-funded', 'self funded', 'vous-meme', 'vous-même', 'autofinancement'].includes(low)) {
     return 'Vous-même';
   }
-  if (['employeur', 'bourse', 'organisme', 'entreprise', 'sponsor', 'institution', 'organisme public'].includes(low)) {
-    return 'Institution';
+  if (['employeur', 'bourse', 'organisme', 'entreprise', 'sponsor', 'institutionFinancement', 'organisme public'].includes(low)) {
+    return 'institutionFinancement';
   }
   return v ? 'Autre' : 'Vous-même';
 };
@@ -213,7 +213,7 @@ export function mapFormToCandidature(v: UnknownRecord): BackendCandidature {
 
   // ---------- Step 3 ----------
   const diplome = asString(getUnknown(v, 'diploma', 'diplome')) || null;
-  const institution = asString(getUnknown(v, 'institution', 'institution')) || null;
+  const institutionFinancement = asString(getUnknown(v, 'institutionFinancement', 'institutionFinancement')) || null;
   const domaine = asString(getUnknown(v, 'field', 'domaine')) || null;
 
   const langues = asStringArray(getUnknown(v, 'languages', 'langues'), []);
@@ -233,9 +233,9 @@ export function mapFormToCandidature(v: UnknownRecord): BackendCandidature {
     getUnknown(v, 'fundingSource', 'mode');
   const mode = normalizeMode(rawMode);
 
-  const institutionFinancement =
+  const institutionFinancementFinancement =
     mode !== 'Vous-même'
-      ? asString(getUnknown(v, 'institutionName', 'institutionFinancement'))
+      ? asString(getUnknown(v, 'institutionFinancementName', 'institutionFinancementFinancement'))
       : null;
 
   const contactFinancement =
@@ -271,7 +271,7 @@ export function mapFormToCandidature(v: UnknownRecord): BackendCandidature {
     descriptionTaches,
 
     diplome,
-    institution,
+    institutionFinancement,
     domaine,
 
     langues,
@@ -281,7 +281,7 @@ export function mapFormToCandidature(v: UnknownRecord): BackendCandidature {
     autresInfos,
 
     mode,
-    institutionFinancement,
+    institutionFinancementFinancement,
     contactFinancement,
     emailContactFinancement,
 

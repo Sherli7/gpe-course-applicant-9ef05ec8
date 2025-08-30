@@ -61,7 +61,7 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       step: 3,
       fields: [
         { label: t('fields.diplome'), value: values.diplome ? t(`options.diplomes.${values.diplome}`) : '' },
-        { label: t('fields.institution'), value: values.institution },
+        { label: t('fields.institutionFinancement'), value: values.institutionFinancement },
         { label: t('fields.domaine'), value: values.domaine },
         { label: t('fields.langues'), value: formatLanguages() },
       ],
@@ -79,7 +79,7 @@ export function Step6Summary({ onEdit }: Step6SummaryProps) {
       step: 5,
       fields: [
         { label: t('fields.mode'), value: values.mode ? t(`options.financement.${values.mode}`) : '' },
-        { label: t('fields.institutionFinancement'), value: values.institutionFinancement || 'N/A' },
+        { label: t('fields.institutionFinancementFinancement'), value: values.institutionFinancementFinancement || 'N/A' },
         { label: t('fields.contactFinancement'), value: values.contactFinancement || 'N/A' },
         { label: t('fields.emailContactFinancement'), value: values.emailContactFinancement || 'N/A' },
         { label: t('fields.source'), value: values.source ? t(`options.sources.${values.source}`) : '' },

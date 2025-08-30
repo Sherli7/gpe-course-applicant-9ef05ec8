@@ -106,15 +106,15 @@ export function Step3Education() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="institution">{t('fields.institution')}</Label>
+          <Label htmlFor="institutionFinancement">{t('fields.institutionFinancement')}</Label>
           <Input
-            id="institution"
-            {...register('institution')}
-            placeholder={t('fields.institution')}
-            className={errors.institution ? 'border-destructive' : ''}
+            id="institutionFinancement"
+            {...register('institutionFinancement')}
+            placeholder={t('fields.institutionFinancement')}
+            className={errors.institutionFinancement ? 'border-destructive' : ''}
           />
-          {errors.institution?.message && (
-            <p className="text-sm text-destructive">{t(errors.institution.message)}</p>
+          {errors.institutionFinancement?.message && (
+            <p className="text-sm text-destructive">{t(errors.institutionFinancement.message)}</p>
           )}
         </div>
 

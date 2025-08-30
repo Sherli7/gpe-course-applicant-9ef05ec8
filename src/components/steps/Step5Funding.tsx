@@ -19,7 +19,7 @@ export function Step5Funding() {
 
   const fundingOptions = [
     { value: 'Vous-même', label: t('options.financement.Vous-même') },
-    { value: 'Institution', label: t('options.financement.Institution') },
+    { value: 'institutionFinancement', label: t('options.financement.institutionFinancement') },
     { value: 'Autre', label: t('options.financement.Autre') },
   ];
 
@@ -71,14 +71,14 @@ export function Step5Funding() {
         {needsFundingDetails && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-lg bg-muted/20">
             <div className="space-y-2">
-              <Label htmlFor="institutionFinancement">
-                {t('fields.institutionFinancement')} <span className="text-muted-foreground ml-1">(optionnel)</span>
+              <Label htmlFor="institutionFinancementFinancement">
+                {t('fields.institutionFinancementFinancement')} <span className="text-muted-foreground ml-1">(optionnel)</span>
               </Label>
-              <Input id="institutionFinancement" {...register('institutionFinancement')}
-                     placeholder={t('fields.institutionFinancement')}
-                     className={errors.institutionFinancement ? 'border-destructive' : ''} />
-              {errors.institutionFinancement?.message && (
-                <p className="text-sm text-destructive">{t(errors.institutionFinancement.message)}</p>
+              <Input id="institutionFinancementFinancement" {...register('institutionFinancementFinancement')}
+                     placeholder={t('fields.institutionFinancementFinancement')}
+                     className={errors.institutionFinancementFinancement ? 'border-destructive' : ''} />
+              {errors.institutionFinancementFinancement?.message && (
+                <p className="text-sm text-destructive">{t(errors.institutionFinancementFinancement.message)}</p>
               )}
             </div>
 

@@ -30,8 +30,6 @@
     "sexe": "Gender",
     "dateNaissance": "Date of Birth",
     "lieuNaissance": "Place of Birth",
-    "dateNaissance": "Date of Birth",
-    "lieuNaissance": "Place of Birth",
     "telephone": "Phone",
     "email": "Email Address",
     "organisation": "Organization",
@@ -40,16 +38,15 @@
     "descriptionTaches": "Job Description",
     "posteActuel": "Current Position",
     "diplome": "Highest Degree",
-    "institution": "Institution",
+    "institutionFinancement": "institutionFinancement",
     "domaine": "Field of Study",
     "langues": "Languages Spoken",
     "niveaux": "Proficiency Level",
     "resultatsAttendus": "Expected Results", 
     "autresInfos": "Additional Information",
     "mode": "Funding Method",
-    "institutionFinancement": "Funding Institution",
+    "institutionFinancementFinancement": "Funding institutionFinancement",
     "contactFinancement": "Funding Contact",
-    "emailContactFinancement": "Contact Email",
     "emailContactFinancement": "Contact Email",
     "source": "How did you hear about us?",
     "consentement": "I consent to data processing"
@@ -85,7 +82,7 @@
     },
     "financement": {
       "Vous-même": "Self-funded",
-      "Institution": "Institution",
+      "institutionFinancement": "institutionFinancement",
       "Autre": "Other"
     },
     "sources": {
