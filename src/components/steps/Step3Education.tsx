@@ -175,7 +175,11 @@ export function Step3Education() {
           <p className="text-sm text-destructive">{t(errors.langues.message)}</p>
         )}
         {errors.niveaux?.message && (
-          <p className="text-sm text-destructive">{t(errors.niveaux.message)}</p>
+          <p className="text-sm text-destructive">
+            {typeof errors.niveaux.message === 'string'
+              ? t(errors.niveaux.message)
+              : t('validation.required')}
+          </p>
         )}
       </div>
     </div>

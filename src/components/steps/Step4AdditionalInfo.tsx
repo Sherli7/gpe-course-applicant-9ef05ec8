@@ -38,8 +38,6 @@ export function Step4AdditionalInfo() {
           <Textarea
             id="resultatsAttendus"
             {...register('resultatsAttendus')}
-            id="resultatsAttendus"
-            {...register('resultatsAttendus')}
             placeholder={t('placeholders.enterText')}
             rows={4}
             aria-invalid={!!errors.resultatsAttendus}
@@ -55,8 +53,6 @@ export function Step4AdditionalInfo() {
             {t('fields.autresInfos')} <span className="text-muted-foreground ml-1">(optionnel)</span>
           </Label>
           <Textarea
-            id="autresInfos"
-            {...register('autresInfos')}
             id="autresInfos"
             {...register('autresInfos')}
             placeholder={t('placeholders.enterText')}

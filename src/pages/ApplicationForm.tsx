@@ -155,8 +155,8 @@ export default function ApplicationForm() {
   const onSubmit: SubmitHandler<ApplicationFormData> = async (data) => {
     setIsSubmitting(true);
     try {
-      // const API_BASE = 'https://gpe-yale.edocsflow.com/api';
-      const API_BASE = 'http://localhost:3000/api';
+      const API_BASE = 'https://gpe-yale.edocsflow.com/api';
+     // const API_BASE = 'http://localhost:3000/api';
       const response = await fetch(`${API_BASE}/candidatures`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -164,7 +164,6 @@ export default function ApplicationForm() {
         body: JSON.stringify(data)
       });
 
-      const resultUnknown: unknown = await response.json().catch(() => ({}));
       const resultUnknown: unknown = await response.json().catch(() => ({}));
 
       if (hasBooleanSuccess(resultUnknown) && resultUnknown.success === true) {
@@ -181,7 +180,6 @@ export default function ApplicationForm() {
         const message =
           (isRecord(resultUnknown) && typeof resultUnknown.message === 'string'
             ? resultUnknown.message
-            : response.statusText) || 'Submission failed';
             : response.statusText) || 'Submission failed';
 
         const details =
