@@ -1,31 +1,31 @@
 import { useTranslation } from 'react-i18next';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, type FieldError } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import type { ApplicationFormData } from '@/schemas/applicationSchema';
 
 export function Step4AdditionalInfo() {
   const { t } = useTranslation();
-  const { register, formState: { errors } } = useFormContext();
+  const { register, formState: { errors } } =
+    useFormContext<ApplicationFormData>();
+
+  const errorEntries = Object.entries(errors) as Array<[string, FieldError]>;
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t('stepper.step4')}
-        </h2>
+        <h2 className="text-2xl font-bold text-foreground mb-2">{t('stepper.step4')}</h2>
         <p className="text-muted-foreground">
-          Partagez vos objectifs et toute information complémentaire pertinente.
+          {t('stepper.step4Desc', 'Partagez vos objectifs et toute information complémentaire pertinente.')}
         </p>
       </div>
 
-      {Object.keys(errors).length > 0 && (
+      {errorEntries.length > 0 && (
         <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-          <p className="text-sm font-medium text-destructive mb-2">
-            {t('validation.errors')}
-          </p>
+          <p className="text-sm font-medium text-destructive mb-2">{t('validation.errors')}</p>
           <ul className="text-sm text-destructive space-y-1">
-            {Object.entries(errors).map(([field, error]) => (
-              <li key={field}>• {t(error?.message as string || 'validation.required')}</li>
+            {errorEntries.map(([field, err]) => (
+              <li key={field}>• {t(err.message ?? 'validation.required')}</li>
             ))}
           </ul>
         </div>
@@ -39,31 +39,28 @@ export function Step4AdditionalInfo() {
             {...register('resultatsAttendus')}
             placeholder={t('placeholders.enterText')}
             rows={4}
-            className={errors.resultatsAttendus ? 'border-destructive' : ''}
+            aria-invalid={!!errors.resultatsAttendus}
+            className={errors.resultatsAttendus ? 'border-destructive' : undefined}
           />
-          {errors.resultatsAttendus && (
-            <p className="text-sm text-destructive">
-              {t(errors.resultatsAttendus?.message as string)}
-            </p>
+          {errors.resultatsAttendus?.message && (
+            <p className="text-sm text-destructive">{t(errors.resultatsAttendus.message)}</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="otherInfo">
-            {t('fields.autres_infos')} 
-            <span className="text-muted-foreground ml-1">(optionnel)</span>
+          <Label htmlFor="autresInfos">
+            {t('fields.autresInfos')} <span className="text-muted-foreground ml-1">(optionnel)</span>
           </Label>
           <Textarea
-            id="otherInfo"
-            {...register('otherInfo')}
+            id="autresInfos"
+            {...register('autresInfos')}
             placeholder={t('placeholders.enterText')}
             rows={4}
-            className={errors.otherInfo ? 'border-destructive' : ''}
+            aria-invalid={!!errors.autresInfos}
+            className={errors.autresInfos ? 'border-destructive' : undefined}
           />
-          {errors.otherInfo && (
-            <p className="text-sm text-destructive">
-              {t(errors.otherInfo?.message as string)}
-            </p>
+          {errors.autresInfos?.message && (
+            <p className="text-sm text-destructive">{t(errors.autresInfos.message)}</p>
           )}
         </div>
       </div>

@@ -16,7 +16,7 @@ export function Header({}: HeaderProps) {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <img 
-            src="./logo.png" 
+            src="/logo.png" 
             alt="GPE-Yale" 
             className="h-10 w-auto"
           />

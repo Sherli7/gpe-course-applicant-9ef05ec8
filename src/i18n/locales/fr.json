@@ -35,19 +35,19 @@
     "organisation": "Organisation",
     "pays": "Pays",
     "departement": "Département/Service",
-    "posteActuel": "Poste actuel",
     "descriptionTaches": "Description des tâches",
+    "posteActuel": "Poste actuel",
     "diplome": "Diplôme le plus élevé",
     "institution": "Institution",
     "domaine": "Domaine d'études",
     "langues": "Langues parlées",
     "niveaux": "Niveau de maîtrise",
     "resultatsAttendus": "Résultats attendus",
-    "autres_infos": "Autres informations",
+    "autresInfos": "Autres informations",
     "mode": "Mode de financement",
     "institutionFinancement": "Institution de financement",
     "contactFinancement": "Contact de financement", 
-    "email_contactFinancement": "Email du contact",
+    "emailContactFinancement": "Email du contact",
     "source": "Comment avez-vous entendu parler de nous ?",
     "consentement": "Je consens au traitement de mes données"
   },
@@ -71,11 +71,7 @@
     },
     "langues": {
       "Français": "Français",
-      "Anglais": "Anglais",
-      "Espagnol": "Espagnol",
-      "Portugais": "Portugais",
-      "Arabe": "Arabe",
-      "Chinois": "Chinois"
+      "Anglais": "Anglais"
     },
     "niveaux": {
       "Débutant": "Débutant",
@@ -86,9 +82,7 @@
     },
     "financement": {
       "Vous-même": "Vous-même",
-      "Employeur": "Employeur", 
-      "Bourse": "Bourse d'études",
-      "Organisme public": "Organisme public",
+      "Institution": "Institution",
       "Autre": "Autre"
     },
     "sources": {

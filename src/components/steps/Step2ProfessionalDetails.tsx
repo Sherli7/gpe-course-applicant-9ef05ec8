@@ -1,32 +1,28 @@
 import { useTranslation } from 'react-i18next';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, type FieldError } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import type { ApplicationFormData } from '@/schemas/applicationSchema';
 
 export function Step2ProfessionalDetails() {
   const { t } = useTranslation();
-  const { register, formState: { errors } } = useFormContext();
+  const { register, formState: { errors } } = useFormContext<ApplicationFormData>();
+  const errorEntries = Object.entries(errors) as Array<[string, FieldError]>;
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t('stepper.step2')}
-        </h2>
-        <p className="text-muted-foreground">
-          Parlez-nous de votre expérience professionnelle actuelle.
-        </p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">{t('stepper.step2')}</h2>
+        <p className="text-muted-foreground">Parlez-nous de votre expérience professionnelle actuelle.</p>
       </div>
 
-      {Object.keys(errors).length > 0 && (
+      {errorEntries.length > 0 && (
         <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-          <p className="text-sm font-medium text-destructive mb-2">
-            {t('validation.errors')}
-          </p>
+          <p className="text-sm font-medium text-destructive mb-2">{t('validation.errors')}</p>
           <ul className="text-sm text-destructive space-y-1">
-            {Object.entries(errors).map(([field, error]) => (
-              <li key={field}>• {t(error?.message as string || 'validation.required')}</li>
+            {errorEntries.map(([field, err]) => (
+              <li key={field}>• {t(err.message ?? 'validation.required')}</li>
             ))}
           </ul>
         </div>
@@ -34,49 +30,29 @@ export function Step2ProfessionalDetails() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="department">{t('fields.departement')}</Label>
-          <Input
-            id="department"
-            {...register('department')}
-            placeholder={t('fields.departement')}
-            className={errors.department ? 'border-destructive' : ''}
-          />
-          {errors.department && (
-            <p className="text-sm text-destructive">
-              {t(errors.department?.message as string)}
-            </p>
-          )}
+          <Label htmlFor="departement">{t('fields.departement')}</Label>
+          <Input id="departement" {...register('departement')}
+                 placeholder={t('fields.departement')}
+                 className={errors.departement ? 'border-destructive' : ''} />
+          {errors.departement?.message && <p className="text-sm text-destructive">{t(errors.departement.message)}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="posteActuel">{t('fields.posteActuel')}</Label>
-          <Input
-            id="posteActuel"
-            {...register('posteActuel')}
-            placeholder={t('fields.posteActuel')}
-            className={errors.posteActuel ? 'border-destructive' : ''}
-          />
-          {errors.posteActuel && (
-            <p className="text-sm text-destructive">
-              {t(errors.posteActuel?.message as string)}
-            </p>
-          )}
+          <Input id="posteActuel" {...register('posteActuel')}
+                 placeholder={t('fields.posteActuel')}
+                 className={errors.posteActuel ? 'border-destructive' : ''} />
+          {errors.posteActuel?.message && <p className="text-sm text-destructive">{t(errors.posteActuel.message)}</p>}
         </div>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="descriptionTaches">{t('fields.descriptionTaches')}</Label>
-        <Textarea
-          id="descriptionTaches"
-          {...register('descriptionTaches')}
-          placeholder={t('placeholders.enterText')}
-          rows={4}
-          className={errors.descriptionTaches ? 'border-destructive' : ''}
-        />
-        {errors.descriptionTaches && (
-          <p className="text-sm text-destructive">
-            {t(errors.descriptionTaches?.message as string)}
-          </p>
+        <Textarea id="descriptionTaches" {...register('descriptionTaches')}
+                  placeholder={t('placeholders.enterText')} rows={4}
+                  className={errors.descriptionTaches ? 'border-destructive' : ''} />
+        {errors.descriptionTaches?.message && (
+          <p className="text-sm text-destructive">{t(errors.descriptionTaches.message)}</p>
         )}
       </div>
     </div>

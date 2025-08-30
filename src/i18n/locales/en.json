@@ -35,19 +35,19 @@
     "organisation": "Organization",
     "pays": "Country",
     "departement": "Department/Service",
-    "posteActuel": "Current Position",
     "descriptionTaches": "Job Description",
+    "posteActuel": "Current Position",
     "diplome": "Highest Degree",
     "institution": "Institution",
     "domaine": "Field of Study",
     "langues": "Languages Spoken",
     "niveaux": "Proficiency Level",
     "resultatsAttendus": "Expected Results", 
-    "autres_infos": "Additional Information",
+    "autresInfos": "Additional Information",
     "mode": "Funding Method",
     "institutionFinancement": "Funding Institution",
     "contactFinancement": "Funding Contact",
-    "email_contactFinancement": "Contact Email",
+    "emailContactFinancement": "Contact Email",
     "source": "How did you hear about us?",
     "consentement": "I consent to data processing"
   },
@@ -71,24 +71,18 @@
     },
     "langues": {
       "Français": "French",
-      "Anglais": "English",
-      "Espagnol": "Spanish", 
-      "Portugais": "Portuguese",
-      "Arabe": "Arabic",
-      "Chinois": "Chinese"
+      "Anglais": "English"
     },
     "niveaux": {
       "Débutant": "Beginner",
       "Intermédiaire": "Intermediate",
-      "Avancé": "Advanced", 
+      "Avancé": "Advanced",
       "Courant": "Fluent",
       "Natif": "Native"
     },
     "financement": {
       "Vous-même": "Self-funded",
-      "Employeur": "Employer",
-      "Bourse": "Scholarship",
-      "Organisme public": "Public Organization", 
+      "Institution": "Institution",
       "Autre": "Other"
     },
     "sources": {

@@ -35,7 +35,7 @@ const stepSchemas = [
   applicationSchema
 ];
 
-/* ---------- Utils (sans any) ---------- */
+/* ---------- Utils ---------- */
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null;
 
@@ -85,14 +85,15 @@ export default function ApplicationForm() {
   };
 
   const methods = useForm<ApplicationFormData>({
-    //resolver: zodResolver(applicationSchema),
+    // 👉 décommente pour activer la validation globale
+    // resolver: zodResolver(applicationSchema),
     mode: 'onChange',
     defaultValues
   });
 
   const { handleSubmit, trigger, getValues, watch, reset } = methods;
 
-  // Charger le brouillon (reset avec partiel typé)
+  // Charger le brouillon
   useEffect(() => {
     const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
     if (!raw) return;
@@ -102,7 +103,7 @@ export default function ApplicationForm() {
         reset(parsed as Partial<ApplicationFormData>);
       }
     } catch {
-      // ignore si invalide
+      // ignore
     }
   }, [reset]);
 
@@ -112,7 +113,9 @@ export default function ApplicationForm() {
     const id = setTimeout(() => {
       try {
         localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(values));
-      } catch {/* noop */}
+      } catch {
+        /* noop */
+      }
     }, 1000);
     return () => clearTimeout(id);
   }, [values]);
@@ -153,16 +156,15 @@ export default function ApplicationForm() {
     setIsSubmitting(true);
     try {
       // const API_BASE = 'https://gpe-yale.edocsflow.com/api';
-       const API_BASE = 'http://localhost:3000/api';
-
-      const resp = await fetch(`${API_BASE}/candidatures`, {
+      const API_BASE = 'http://localhost:3000/api';
+      const response = await fetch(`${API_BASE}/candidatures`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         credentials: 'include',
         body: JSON.stringify(data)
       });
 
-      const resultUnknown: unknown = await resp.json().catch(() => ({}));
+      const resultUnknown: unknown = await response.json().catch(() => ({}));
 
       if (hasBooleanSuccess(resultUnknown) && resultUnknown.success === true) {
         localStorage.removeItem(DRAFT_STORAGE_KEY);
@@ -178,7 +180,7 @@ export default function ApplicationForm() {
         const message =
           (isRecord(resultUnknown) && typeof resultUnknown.message === 'string'
             ? resultUnknown.message
-            : resp.statusText) || 'Submission failed';
+            : response.statusText) || 'Submission failed';
 
         const details =
           isRecord(resultUnknown) && Array.isArray(resultUnknown.details)

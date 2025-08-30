@@ -59,65 +59,65 @@ export function Step1GeneralInfo() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="lastName">{t('fields.nom')}</Label>
+          <Label htmlFor="nom">{t('fields.nom')}</Label>
           <Input
-            id="lastName"
-            {...register('lastName')}
+            id="nom"
+            {...register('nom')}
             placeholder={t('fields.nom')}
-            className={errors.lastName ? 'border-destructive' : ''}
+            className={errors.nom ? 'border-destructive' : ''}
           />
-          {errors.lastName && (
+          {errors.nom && (
             <p className="text-sm text-destructive">
-              {t(errors.lastName?.message as string)}
+              {t(errors.nom?.message as string)}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="firstName">{t('fields.prenom')}</Label>
+          <Label htmlFor="prenom">{t('fields.prenom')}</Label>
           <Input
-            id="firstName"
-            {...register('firstName')}
+            id="prenom"
+            {...register('prenom')}
             placeholder={t('fields.prenom')}
-            className={errors.firstName ? 'border-destructive' : ''}
+            className={errors.prenom ? 'border-destructive' : ''}
           />
-          {errors.firstName && (
+          {errors.prenom && (
             <p className="text-sm text-destructive">
-              {t(errors.firstName?.message as string)}
+              {t(errors.prenom?.message as string)}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="nationality">{t('fields.nationalite')}</Label>
+          <Label htmlFor="nationalite">{t('fields.nationalite')}</Label>
           <SearchableSelect
             options={countryOptions}
-            value={values.nationality}
-            onValueChange={(value) => setValue('nationality', value)}
+            value={values.nationalite}
+            onValueChange={(value) => setValue('nationalite', value)}
             placeholder={t('fields.nationalite')}
             searchPlaceholder={t('placeholders.searchCountry')}
             groupSeparators={separators}
-            className={errors.nationality ? 'border-destructive' : ''}
+            className={errors.nationalite ? 'border-destructive' : ''}
           />
-          {errors.nationality && (
+          {errors.nationalite && (
             <p className="text-sm text-destructive">
-              {t(errors.nationality?.message as string)}
+              {t(errors.nationalite?.message as string)}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="gender">{t('fields.sexe')}</Label>
+          <Label htmlFor="sexe">{t('fields.sexe')}</Label>
           <SearchableSelect
             options={sexOptions}
-            value={values.gender}
-            onValueChange={(value) => setValue('gender', value)}
+            value={values.sexe}
+            onValueChange={(value) => setValue('sexe', value)}
             placeholder={t('fields.sexe')}
-            className={errors.gender ? 'border-destructive' : ''}
+            className={errors.sexe ? 'border-destructive' : ''}
           />
-          {errors.gender && (
+          {errors.sexe && (
             <p className="text-sm text-destructive">
-              {t(errors.gender?.message as string)}
+              {t(errors.sexe?.message as string)}
             </p>
           )}
         </div>
@@ -156,17 +156,17 @@ export function Step1GeneralInfo() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="phoneNumber">{t('fields.telephone')}</Label>
+          <Label htmlFor="telephone">{t('fields.telephone')}</Label>
           <Input
-            id="phoneNumber"
+            id="telephone"
             type="tel"
-            {...register('phoneNumber')}
+            {...register('telephone')}
             placeholder="+237 699 00 00 00"
-            className={errors.phoneNumber ? 'border-destructive' : ''}
+            className={errors.telephone ? 'border-destructive' : ''}
           />
-          {errors.phoneNumber && (
+          {errors.telephone && (
             <p className="text-sm text-destructive">
-              {t(errors.phoneNumber?.message as string)}
+              {t(errors.telephone?.message as string)}
             </p>
           )}
         </div>
@@ -188,34 +188,34 @@ export function Step1GeneralInfo() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="organization">{t('fields.organisation')}</Label>
+          <Label htmlFor="organisation">{t('fields.organisation')}</Label>
           <Input
-            id="organization"
-            {...register('organization')}
+            id="organisation"
+            {...register('organisation')}
             placeholder={t('fields.organisation')}
-            className={errors.organization ? 'border-destructive' : ''}
+            className={errors.organisation ? 'border-destructive' : ''}
           />
-          {errors.organization && (
+          {errors.organisation && (
             <p className="text-sm text-destructive">
-              {t(errors.organization?.message as string)}
+              {t(errors.organisation?.message as string)}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="country">{t('fields.pays')}</Label>
+          <Label htmlFor="pays">{t('fields.pays')}</Label>
           <SearchableSelect
             options={countryOptions}
-            value={values.country}
-            onValueChange={(value) => setValue('country', value)}
+            value={values.pays}
+            onValueChange={(value) => setValue('pays', value)}
             placeholder={t('fields.pays')}
             searchPlaceholder={t('placeholders.searchCountry')}
             groupSeparators={separators}
-            className={errors.country ? 'border-destructive' : ''}
+            className={errors.pays ? 'border-destructive' : ''}
           />
-          {errors.country && (
+          {errors.pays && (
             <p className="text-sm text-destructive">
-              {t(errors.country?.message as string)}
+              {t(errors.pays?.message as string)}
             </p>
           )}
         </div>
