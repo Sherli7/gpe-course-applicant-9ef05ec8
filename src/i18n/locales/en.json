@@ -30,6 +30,8 @@
     "sexe": "Gender",
     "dateNaissance": "Date of Birth",
     "lieuNaissance": "Place of Birth",
+    "dateNaissance": "Date of Birth",
+    "lieuNaissance": "Place of Birth",
     "telephone": "Phone",
     "email": "Email Address",
     "organisation": "Organization",
@@ -47,6 +49,7 @@
     "mode": "Funding Method",
     "institutionFinancement": "Funding Institution",
     "contactFinancement": "Funding Contact",
+    "emailContactFinancement": "Contact Email",
     "emailContactFinancement": "Contact Email",
     "source": "How did you hear about us?",
     "consentement": "I consent to data processing"

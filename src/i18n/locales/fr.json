@@ -30,6 +30,8 @@
     "sexe": "Sexe",
     "dateNaissance": "Date de naissance",
     "lieuNaissance": "Lieu de naissance",
+    "dateNaissance": "Date de naissance",
+    "lieuNaissance": "Lieu de naissance",
     "telephone": "Téléphone",
     "email": "Adresse email",
     "organisation": "Organisation",
@@ -47,6 +49,7 @@
     "mode": "Mode de financement",
     "institutionFinancement": "Institution de financement",
     "contactFinancement": "Contact de financement", 
+    "emailContactFinancement": "Email du contact",
     "emailContactFinancement": "Email du contact",
     "source": "Comment avez-vous entendu parler de nous ?",
     "consentement": "Je consens au traitement de mes données"

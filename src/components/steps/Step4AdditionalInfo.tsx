@@ -34,7 +34,10 @@ export function Step4AdditionalInfo() {
       <div className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="resultatsAttendus">{t('fields.resultatsAttendus')}</Label>
+          <Label htmlFor="resultatsAttendus">{t('fields.resultatsAttendus')}</Label>
           <Textarea
+            id="resultatsAttendus"
+            {...register('resultatsAttendus')}
             id="resultatsAttendus"
             {...register('resultatsAttendus')}
             placeholder={t('placeholders.enterText')}
@@ -52,6 +55,8 @@ export function Step4AdditionalInfo() {
             {t('fields.autresInfos')} <span className="text-muted-foreground ml-1">(optionnel)</span>
           </Label>
           <Textarea
+            id="autresInfos"
+            {...register('autresInfos')}
             id="autresInfos"
             {...register('autresInfos')}
             placeholder={t('placeholders.enterText')}
