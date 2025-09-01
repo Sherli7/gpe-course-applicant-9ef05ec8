@@ -1,15 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useForm, FormProvider, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, FormProvider, type SubmitHandler, FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   applicationSchema,
   ApplicationFormData,
-  step1Schema,
-  step2Schema,
-  step3Schema,
-  step4Schema,
-  step5Schema
+  step1Schema, step2Schema, step3Schema, step4Schema, step5Schema
 } from '@/schemas/applicationSchema';
 import { Header } from '@/components/Header';
 import { Stepper } from '@/components/Stepper';
@@ -25,24 +20,17 @@ import { useToast } from '@/hooks/use-toast';
 
 const TOTAL_STEPS = 6;
 const DRAFT_STORAGE_KEY = 'application-draft';
+const API_BASE = import.meta.env.VITE_API_BASE as string;
 
-const stepSchemas = [
-  step1Schema,
-  step2Schema,
-  step3Schema,
-  step4Schema,
-  step5Schema,
-  applicationSchema
-];
+const stepSchemas = [ step1Schema, step2Schema, step3Schema, step4Schema, step5Schema, applicationSchema ];
 
 /* ---------- Utils ---------- */
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null;
 
-type BackendOk = { success: true; message?: string; details?: string[] };
+type BackendOk = { success: true; message?: string; id?: number; uuid?: string; dateSoumission?: string };
 type BackendFail = { success: false; message: string; details?: string[] };
 type BackendResp = BackendOk | BackendFail;
-
 const hasBooleanSuccess = (v: unknown): v is BackendResp =>
   isRecord(v) && 'success' in v && typeof (v as { success: unknown }).success === 'boolean';
 
@@ -54,44 +42,26 @@ export default function ApplicationForm() {
   const [stepErrors, setStepErrors] = useState<Record<number, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Valeurs par défaut FR conformes au backend
+  // Valeurs par défaut conformes au backend
   const defaultValues: Partial<ApplicationFormData> = {
-    nom: '',
-    prenom: '',
-    nationalite: '',
-    sexe: 'Homme',
-    dateNaissance: '',
-    lieuNaissance: '',
-    telephone: '',
-    email: '',
-    organisation: '',
-    pays: '',
-    departement: '',
-    posteActuel: '',
-    descriptionTaches: '',
-    diplome: '',
-    institutionFinancement: '',
-    domaine: '',
-    langues: [],
-    niveaux: {},
-    resultatsAttendus: '',
-    autresInfos: '',
+    nom: '', prenom: '', nationalite: '', sexe: 'Homme',
+    dateNaissance: '', lieuNaissance: '', telephone: '', email: '',
+    organisation: '', pays: '',
+    departement: '', posteActuel: '', descriptionTaches: '',
+    diplome: '', domaine: '',
+    langues: [], niveaux: {},
+    resultatsAttendus: '', autresInfos: '',
     mode: 'Vous-même',
-    institutionFinancementFinancement: '',
-    contactFinancement: '',
-    emailContactFinancement: '',
-    source: '',
-    consentement: false
+    institutionFinancement: '', contactFinancement: '', emailContactFinancement: '',
+    source: '', consentement: false
   };
 
   const methods = useForm<ApplicationFormData>({
-    // 👉 décommente pour activer la validation globale
-    // resolver: zodResolver(applicationSchema),
     mode: 'onChange',
     defaultValues
   });
 
-  const { handleSubmit, trigger, getValues, watch, reset } = methods;
+  const { handleSubmit, trigger, getValues, watch, reset, setError } = methods;
 
   // Charger le brouillon
   useEffect(() => {
@@ -99,24 +69,16 @@ export default function ApplicationForm() {
     if (!raw) return;
     try {
       const parsed: unknown = JSON.parse(raw);
-      if (isRecord(parsed)) {
-        reset(parsed as Partial<ApplicationFormData>);
-      }
-    } catch {
-      // ignore
-    }
+      if (isRecord(parsed)) reset(parsed as Partial<ApplicationFormData>);
+    } catch { /* ignore */ }
   }, [reset]);
 
   // Auto-save (debounce)
   const values = watch();
   useEffect(() => {
     const id = setTimeout(() => {
-      try {
-        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(values));
-      } catch {
-        /* noop */
-      }
-    }, 1000);
+      try { localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(values)); } catch { /* noop */ }
+    }, 800);
     return () => clearTimeout(id);
   }, [values]);
 
@@ -131,11 +93,7 @@ export default function ApplicationForm() {
       setStepErrors((p) => ({ ...p, [currentStep]: true }));
       setCompletedSteps((p) => ({ ...p, [currentStep]: false }));
       await trigger();
-      toast({
-        title: t('validation.errors'),
-        description: t('errors.validation'),
-        variant: 'destructive'
-      });
+      toast({ title: t('validation.errors'), description: t('errors.validation'), variant: 'destructive' });
       return false;
     }
   };
@@ -145,18 +103,14 @@ export default function ApplicationForm() {
     if (ok && currentStep < TOTAL_STEPS) setCurrentStep((s) => s + 1);
   };
 
-  const handlePrevious = () => {
-    if (currentStep > 1) setCurrentStep((s) => s - 1);
-  };
-
+  const handlePrevious = () => { if (currentStep > 1) setCurrentStep((s) => s - 1); };
   const handleEditFromSummary = (step: number) => setCurrentStep(step);
 
-  // Soumission directe des clés FR
+  // Soumission
+  const EMAIL_FIELD: FieldPath<ApplicationFormData> = 'email';
   const onSubmit: SubmitHandler<ApplicationFormData> = async (data) => {
     setIsSubmitting(true);
     try {
-      const API_BASE = 'https://gpe-yale.edocsflow.com/api';
-     // const API_BASE = 'http://localhost:3000/api';
       const response = await fetch(`${API_BASE}/candidatures`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -164,15 +118,23 @@ export default function ApplicationForm() {
         body: JSON.stringify(data)
       });
 
+      if (response.status === 409) {
+        const payload = (await response.json()) as BackendFail | Record<string, unknown>;
+        const msg = (isRecord(payload) && typeof payload.message === 'string')
+          ? payload.message
+          : t('errors.emailAlreadyUsed', 'Une candidature avec cet email existe déjà.');
+        setError(EMAIL_FIELD, { type: 'conflict', message: msg });
+        setCurrentStep(1);
+        setIsSubmitting(false);
+        return;
+      }
+
       const resultUnknown: unknown = await response.json().catch(() => ({}));
 
       if (hasBooleanSuccess(resultUnknown) && resultUnknown.success === true) {
         localStorage.removeItem(DRAFT_STORAGE_KEY);
-        toast({
-          title: t('confirmation.title'),
-          description: t('confirmation.message')
-        });
-        methods.reset();
+        toast({ title: t('confirmation.title'), description: t('confirmation.message') });
+        methods.reset(defaultValues);
         setCurrentStep(1);
         setCompletedSteps({});
         setStepErrors({});
@@ -187,18 +149,10 @@ export default function ApplicationForm() {
             ? `\n- ${resultUnknown.details.join('\n- ')}`
             : '';
 
-        toast({
-          title: t('errors.server'),
-          description: `${message}${details}`,
-          variant: 'destructive'
-        });
+        toast({ title: t('errors.server'), description: `${message}${details}`, variant: 'destructive' });
       }
     } catch {
-      toast({
-        title: t('errors.server'),
-        description: t('errors.network'),
-        variant: 'destructive'
-      });
+      toast({ title: t('errors.server'), description: t('errors.network'), variant: 'destructive' });
     } finally {
       setIsSubmitting(false);
     }
@@ -206,20 +160,13 @@ export default function ApplicationForm() {
 
   const renderCurrentStep = () => {
     switch (currentStep) {
-      case 1:
-        return <Step1GeneralInfo />;
-      case 2:
-        return <Step2ProfessionalDetails />;
-      case 3:
-        return <Step3Education />;
-      case 4:
-        return <Step4AdditionalInfo />;
-      case 5:
-        return <Step5Funding />;
-      case 6:
-        return <Step6Summary onEdit={handleEditFromSummary} />;
-      default:
-        return <Step1GeneralInfo />;
+      case 1: return <Step1GeneralInfo />;
+      case 2: return <Step2ProfessionalDetails />;
+      case 3: return <Step3Education />;
+      case 4: return <Step4AdditionalInfo />;
+      case 5: return <Step5Funding />;
+      case 6: return <Step6Summary onEdit={handleEditFromSummary} />;
+      default: return <Step1GeneralInfo />;
     }
   };
 
@@ -232,15 +179,10 @@ export default function ApplicationForm() {
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {hasDraft && currentStep === 1 && (
           <div className="mb-6 bg-primary/10 border border-primary/20 rounded-lg p-4">
-            <p className="text-sm font-medium text-primary mb-2">
-              {t('navigation.resumeDraft')}
-            </p>
+            <p className="text-sm font-medium text-primary mb-2">{t('navigation.resumeDraft')}</p>
             <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                toast({ title: 'Brouillon chargé', description: 'Vos données ont été restaurées' })
-              }
+              variant="outline" size="sm"
+              onClick={() => methods.reset(JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || '{}'))}
             >
               {t('navigation.resumeDraft')}
             </Button>
@@ -249,12 +191,7 @@ export default function ApplicationForm() {
 
         <Card className="rounded-2xl shadow-lg">
           <CardContent className="p-8">
-            <Stepper
-              currentStep={currentStep}
-              totalSteps={TOTAL_STEPS}
-              errors={stepErrors}
-              completedSteps={completedSteps}
-            />
+            <Stepper currentStep={currentStep} totalSteps={TOTAL_STEPS} errors={stepErrors} completedSteps={completedSteps} />
 
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -266,9 +203,7 @@ export default function ApplicationForm() {
                   </Button>
 
                   {currentStep < TOTAL_STEPS ? (
-                    <Button type="button" onClick={handleNext}>
-                      {t('navigation.next')}
-                    </Button>
+                    <Button type="button" onClick={handleNext}>{t('navigation.next')}</Button>
                   ) : (
                     <Button type="submit" disabled={isSubmitting}>
                       {isSubmitting ? 'Envoi...' : t('navigation.submit')}

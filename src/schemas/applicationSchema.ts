@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const phoneRegex = /^\+?[1-9]\d{7,14}$/;
 
-export const SEXES = ['Homme', 'Femme', 'Autre'] as const;
+export const SEXES = ['Homme', 'Femme'] as const;
 export type Sexe = typeof SEXES[number];
 
 export const LEVELS = ['Débutant', 'Intermédiaire', 'Avancé', 'Natif'] as const;
