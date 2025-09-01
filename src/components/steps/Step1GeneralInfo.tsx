@@ -30,7 +30,7 @@ type EmailCheck =
 
 type WithMessage = { message?: string };
 
-const API_BASE = import.meta.env.VITE_API_BASE as string;
+const API_BASE = 'https://gpe-yale.edocsflow.com/api';
 
 export function Step1GeneralInfo() {
   const { t } = useTranslation();
