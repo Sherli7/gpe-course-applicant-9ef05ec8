@@ -31,6 +31,7 @@ type EmailCheck =
 type WithMessage = { message?: string };
 
 const API_BASE = 'https://gpe-yale.edocsflow.com/api';
+//const API_BASE = 'http://localhost:5173/api';
 
 export function Step1GeneralInfo() {
   const { t } = useTranslation();

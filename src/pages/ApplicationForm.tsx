@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const TOTAL_STEPS = 6;
 const DRAFT_STORAGE_KEY = 'application-draft';
-const API_BASE = import.meta.env.VITE_API_BASE as string;
+const API_BASE = 'https://gpe-yale.edocsflow.com/api';
 
 const stepSchemas = [ step1Schema, step2Schema, step3Schema, step4Schema, step5Schema, applicationSchema ];
 

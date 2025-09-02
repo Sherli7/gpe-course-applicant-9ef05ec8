@@ -14,28 +14,30 @@ export function Step5Funding() {
 
   const values = watch();
   const fundingMethod = values.mode;
-  const needsFundingDetails = fundingMethod && fundingMethod !== 'Vous-même';
+  const needsFundingDetails = fundingMethod !== 'Vous-même';
   const errorEntries = Object.entries(errors) as Array<[string, FieldError]>;
 
-  const fundingOptions = [
-    { value: 'Vous-même', label: t('options.financement.Vous-même') },
-    { value: 'Institution', label: t('options.financement.Institution') },
-    { value: 'Autre', label: t('options.financement.Autre') },
+  const fundingOptions: Array<{ value: Mode; label: string }> = [
+    { value: 'Vous-même', label: t('options.financement.Vous-même', 'Vous-même') },
+    { value: 'Institution', label: t('options.financement.Institution', 'Institution') },
+    { value: 'Autre', label: t('options.financement.Autre', 'Autre') },
   ];
 
   const sourceOptions = [
-    { value: 'Site web', label: t('options.sources.Site web') },
-    { value: 'Réseaux sociaux', label: t('options.sources.Réseaux sociaux') },
-    { value: 'Bouche-à-oreille', label: t('options.sources.Bouche-à-oreille') },
-    { value: 'Partenaire', label: t('options.sources.Partenaire') },
-    { value: 'Autre', label: t('options.sources.Autre') },
+    { value: 'Site web',          label: t('options.sources.Site web', 'Site web') },
+    { value: 'Réseaux sociaux',   label: t('options.sources.Réseaux sociaux', 'Réseaux sociaux') },
+    { value: 'Bouche-à-oreille',  label: t('options.sources.Bouche-à-oreille', 'Bouche-à-oreille') },
+    { value: 'Partenaire',        label: t('options.sources.Partenaire', 'Partenaire') },
+    { value: 'Autre',             label: t('options.sources.Autre', 'Autre') },
   ];
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">{t('stepper.step5')}</h2>
-        <p className="text-muted-foreground">Informations sur le financement de votre formation.</p>
+        <p className="text-muted-foreground">
+          {t('help.financement', 'Informations sur le financement de votre formation.')}
+        </p>
       </div>
 
       {errorEntries.length > 0 && (
@@ -50,6 +52,7 @@ export function Step5Funding() {
       )}
 
       <div className="space-y-6">
+        {/* Mode de financement */}
         <div className="space-y-4">
           <Label className="text-base font-medium">{t('fields.mode')}</Label>
           <RadioGroup
@@ -68,15 +71,21 @@ export function Step5Funding() {
           )}
         </div>
 
+        {/* Détails financement si ≠ Vous-même */}
         {needsFundingDetails && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-lg bg-muted/20">
             <div className="space-y-2">
               <Label htmlFor="institutionFinancement">
-                {t('fields.institutionFinancement')} <span className="text-muted-foreground ml-1">(optionnel)</span>
+                {t('fields.institutionFinancement')} <span className="text-muted-foreground ml-1">({t('labels.requis', 'requis')})</span>
               </Label>
-              <Input id="institutionFinancement" {...register('institutionFinancement')}
-                     placeholder={t('fields.institutionFinancement')}
-                     className={errors.institutionFinancement ? 'border-destructive' : ''} />
+              <Input
+                id="institutionFinancement"
+                {...register('institutionFinancement')}
+                placeholder={t('fields.institutionFinancement')}
+                className={errors.institutionFinancement ? 'border-destructive' : ''}
+                required
+                aria-required="true"
+              />
               {errors.institutionFinancement?.message && (
                 <p className="text-sm text-destructive">{t(errors.institutionFinancement.message)}</p>
               )}
@@ -84,11 +93,16 @@ export function Step5Funding() {
 
             <div className="space-y-2">
               <Label htmlFor="contactFinancement">
-                {t('fields.contactFinancement')} <span className="text-muted-foreground ml-1">(optionnel)</span>
+                {t('fields.contactFinancement')} <span className="text-muted-foreground ml-1">({t('labels.requis', 'requis')})</span>
               </Label>
-              <Input id="contactFinancement" {...register('contactFinancement')}
-                     placeholder={t('fields.contactFinancement')}
-                     className={errors.contactFinancement ? 'border-destructive' : ''} />
+              <Input
+                id="contactFinancement"
+                {...register('contactFinancement')}
+                placeholder={t('fields.contactFinancement')}
+                className={errors.contactFinancement ? 'border-destructive' : ''}
+                required
+                aria-required="true"
+              />
               {errors.contactFinancement?.message && (
                 <p className="text-sm text-destructive">{t(errors.contactFinancement.message)}</p>
               )}
@@ -96,11 +110,17 @@ export function Step5Funding() {
 
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="emailContactFinancement">
-                {t('fields.emailContactFinancement')} <span className="text-muted-foreground ml-1">(optionnel)</span>
+                {t('fields.emailContactFinancement')} <span className="text-muted-foreground ml-1">({t('labels.requis', 'requis')})</span>
               </Label>
-              <Input id="emailContactFinancement" type="email" {...register('emailContactFinancement')}
-                     placeholder="contact@organisation.com"
-                     className={errors.emailContactFinancement ? 'border-destructive' : ''} />
+              <Input
+                id="emailContactFinancement"
+                type="email"
+                {...register('emailContactFinancement')}
+                placeholder="contact@organisation.com"
+                className={errors.emailContactFinancement ? 'border-destructive' : ''}
+                required
+                aria-required="true"
+              />
               {errors.emailContactFinancement?.message && (
                 <p className="text-sm text-destructive">{t(errors.emailContactFinancement.message)}</p>
               )}
@@ -108,8 +128,8 @@ export function Step5Funding() {
           </div>
         )}
 
+        {/* Source */}
         <div className="space-y-2">
-          <Label htmlFor="source">{t('fields.source')}</Label>
           <Label htmlFor="source">{t('fields.source')}</Label>
           <SearchableSelect
             options={sourceOptions}
@@ -118,26 +138,32 @@ export function Step5Funding() {
             placeholder={t('fields.source')}
             className={errors.source ? 'border-destructive' : ''}
           />
-          {errors.source?.message && <p className="text-sm text-destructive">{t(errors.source.message)}</p>}
+          {errors.source?.message && (
+            <p className="text-sm text-destructive">{t(errors.source.message)}</p>
+          )}
         </div>
 
+        {/* Consentement */}
         <div className="flex items-start space-x-2 p-4 border rounded-lg">
           <Checkbox
             id="consentement"
             checked={values.consentement}
-            onCheckedChange={(checked) => setValue('consentement', checked === true, { shouldValidate: true })}
+            onCheckedChange={(checked) =>
+              setValue('consentement', checked === true, { shouldValidate: true })
+            }
           />
           <div className="space-y-1">
             <Label htmlFor="consentement" className="text-sm font-normal cursor-pointer">
               {t('fields.consentement')}
             </Label>
             <p className="text-xs text-muted-foreground">
-              En cochant cette case, vous acceptez que vos données personnelles soient traitées conformément à notre
-              politique de confidentialité.
+              {t('help.consentement', "En cochant cette case, vous acceptez que vos données personnelles soient traitées conformément à notre politique de confidentialité.")}
             </p>
           </div>
         </div>
-        {errors.consentement?.message && <p className="text-sm text-destructive">{t(errors.consentement.message)}</p>}
+        {errors.consentement?.message && (
+          <p className="text-sm text-destructive">{t(errors.consentement.message)}</p>
+        )}
       </div>
     </div>
   );
