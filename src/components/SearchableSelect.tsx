@@ -27,9 +27,17 @@ interface SearchableSelectProps {
   onValueChange: (value: string) => void;
   placeholder?: string;
   searchPlaceholder?: string;
+  emptyMessage?: string; // Nouvelle prop pour personnaliser le message de recherche vide
   className?: string;
   disabled?: boolean;
   groupSeparators?: { [key: string]: string };
+}
+
+function normalizeString(str: string): string {
+  return str
+    .normalize('NFD') // Décomposer les caractères accentués
+    .replace(/[\u0300-\u036f]/g, '') // Supprimer les marques diacritiques
+    .toLowerCase();
 }
 
 export function SearchableSelect({
@@ -38,9 +46,10 @@ export function SearchableSelect({
   onValueChange,
   placeholder,
   searchPlaceholder,
+  emptyMessage,
   className,
   disabled = false,
-  groupSeparators
+  groupSeparators,
 }: SearchableSelectProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -48,9 +57,9 @@ export function SearchableSelect({
 
   const filteredOptions = useMemo(() => {
     if (!searchQuery) return options;
+    const normalizedQuery = normalizeString(searchQuery);
     return options.filter(option =>
-      option.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      option.value.toLowerCase().includes(searchQuery.toLowerCase())
+      normalizeString(option.label).includes(normalizedQuery)
     );
   }, [options, searchQuery]);
 
@@ -61,7 +70,7 @@ export function SearchableSelect({
       const groups: { separator?: string; options: Option[] }[] = [];
       let currentGroup: Option[] = [];
 
-      filteredOptions.forEach(option => {
+      options.forEach(option => {
         const separator = groupSeparators[option.value];
         if (separator) {
           if (currentGroup.length > 0) {
@@ -78,35 +87,40 @@ export function SearchableSelect({
         groups.push({ options: currentGroup });
       }
 
-      return groups.map((group, index) => (
-        <div key={index}>
-          {group.separator && (
-            <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground border-t">
-              {group.separator}
-            </div>
-          )}
-          <CommandGroup>
-            {group.options.map((option) => (
-              <CommandItem
-                key={option.value}
-                onSelect={() => {
-                  onValueChange(option.value);
-                  setOpen(false);
-                  setSearchQuery('');
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === option.value ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {option.label}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </div>
-      ));
+      // Filtrer les groupes pour inclure uniquement ceux avec des options filtrées
+      return groups.map((group, index) => {
+        const groupOptions = group.options.filter(opt => filteredOptions.includes(opt));
+        if (groupOptions.length === 0) return null;
+        return (
+          <div key={index}>
+            {group.separator && (
+              <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground border-t">
+                {group.separator}
+              </div>
+            )}
+            <CommandGroup>
+              {groupOptions.map((option) => (
+                <CommandItem
+                  key={option.value}
+                  onSelect={() => {
+                    onValueChange(option.value);
+                    setOpen(false);
+                    setSearchQuery('');
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === option.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {option.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </div>
+        );
+      }).filter(Boolean);
     }
 
     return (
@@ -155,7 +169,7 @@ export function SearchableSelect({
             onValueChange={setSearchQuery}
           />
           <CommandEmpty>
-            {t('validation.required')}
+            {emptyMessage || t('validation.noResults')}
           </CommandEmpty>
           <div className="max-h-60 overflow-auto">
             {renderOptions()}

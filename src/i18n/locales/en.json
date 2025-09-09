@@ -55,7 +55,8 @@
     "search": "Search...",
     "searchCountry": "Search country...",
     "selectOption": "Select an option",
-    "enterText": "Enter your text here..."
+    "enterText": "Enter your text here...",
+    "lieuNaissance": "City, Country"
   },
   "options": {
     "sexe": {
@@ -105,7 +106,8 @@
     "phone": "Invalid phone format (ex: +237 699 00 00 00)",
     "minAge": "You must be at least 18 years old",
     "languageLevel": "Please indicate the level for each selected language",
-    "errors": "Please correct the following errors:"
+    "errors": "Please correct the following errors:",
+    "noResults": "No result found"
   },
   "confirmation": {
     "title": "Application Submitted Successfully!",

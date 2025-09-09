@@ -55,7 +55,8 @@
     "search": "Rechercher...",
     "searchCountry": "Rechercher un pays...",
     "selectOption": "Sélectionner une option",
-    "enterText": "Saisissez votre texte ici..."
+    "enterText": "Saisissez votre texte ici...",
+    "lieuNaissance": "Ville, Pays"
   },
   "options": {
     "sexe": {
@@ -105,7 +106,8 @@
     "phone": "Format de téléphone invalide (ex: +237 699 00 00 00)",
     "minAge": "Vous devez avoir au moins 18 ans",
     "languageLevel": "Veuillez indiquer le niveau pour chaque langue sélectionnée",
-    "errors": "Veuillez corriger les erreurs suivantes :"
+    "errors": "Veuillez corriger les erreurs suivantes :",
+    "noResults": "Aucun résultat trouvé"
   },
   "confirmation": {
     "title": "Candidature envoyée avec succès !",

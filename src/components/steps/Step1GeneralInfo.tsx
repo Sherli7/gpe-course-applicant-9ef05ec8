@@ -5,7 +5,7 @@ import type { ApplicationFormData } from '@/schemas/applicationSchema';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SearchableSelect } from '@/components/SearchableSelect';
-import { getCountriesWithPriority } from '@/data/countries';
+import { getCountriesWithPriority, getNationalitiesWithPriority } from '@/data/countries';
 
 type EmailExistsResponse = {
   exists: boolean;
@@ -18,9 +18,6 @@ type EmailExistsResponse = {
   };
 };
 
-const pickDate = (o?: EmailExistsResponse['last']): string | undefined =>
-  o?.date_soumission ?? o?.date ?? o?.dateSoumission;
-
 type EmailCheck =
   | { status: 'idle' }
   | { status: 'checking' }
@@ -31,10 +28,9 @@ type EmailCheck =
 type WithMessage = { message?: string };
 
 const API_BASE = 'https://gpe-yale.edocsflow.com/api';
-//const API_BASE = 'http://localhost:5173/api';
 
 export function Step1GeneralInfo() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { register, setValue, watch, formState: { errors } } = useFormContext<ApplicationFormData>();
   const values = watch();
 
@@ -83,19 +79,25 @@ export function Step1GeneralInfo() {
     return () => { clearTimeout(timer); ctrl.abort(); };
   }, [values?.email]);
 
-  const countries = getCountriesWithPriority();
+  const locale = i18n.language?.toLowerCase().startsWith('en') ? 'en' : 'fr';
+  const countries = getCountriesWithPriority(locale);
+  const nationalities = getNationalitiesWithPriority(locale);
+
   const countryOptions = [
-    ...countries.priority.map((country) => ({ value: country, label: country })),
-    ...countries.others.map((country) => ({ value: country, label: country })),
+    ...countries.priority,
+    ...countries.others,
+  ];
+  const nationalityOptions = [
+    ...nationalities.priority,
+    ...nationalities.others,
   ];
   const separators = {
-    [countries.priority[0]]: t('countries.separator.priority'),
-    [countries.others[0]]: t('countries.separator.others'),
+    [countries.priority[0]?.value ?? '']: t('countries.separator.priority'),
+    [countries.others[0]?.value ?? '']: t('countries.separator.others'),
   };
   const sexOptions = [
     { value: 'Homme', label: t('options.sexe.Homme') },
     { value: 'Femme', label: t('options.sexe.Femme') },
-    { value: 'Autre', label: t('options.sexe.Autre') },
   ];
 
   return (
@@ -136,11 +138,12 @@ export function Step1GeneralInfo() {
         <div className="space-y-2">
           <Label htmlFor="nationalite">{t('fields.nationalite')}</Label>
           <SearchableSelect
-            options={countryOptions}
+            options={nationalityOptions}
             value={values.nationalite}
             onValueChange={(value) => setValue('nationalite', value)}
             placeholder={t('fields.nationalite')}
-            searchPlaceholder={t('placeholders.searchCountry')}
+            searchPlaceholder={t('placeholders.searchNationality')}
+            emptyMessage={t('validation.noNationalityFound')}
             groupSeparators={separators}
             className={errors.nationalite ? 'border-destructive' : ''}
           />
@@ -155,6 +158,8 @@ export function Step1GeneralInfo() {
             value={values.sexe}
             onValueChange={(value) => setValue('sexe', value as ApplicationFormData['sexe'])}
             placeholder={t('fields.sexe')}
+            searchPlaceholder={t('placeholders.search')}
+            emptyMessage={t('validation.noResults')}
             className={errors.sexe ? 'border-destructive' : ''}
           />
           {errors.sexe && <p className="text-sm text-destructive">{t((errors.sexe as WithMessage).message ?? '')}</p>}
@@ -170,13 +175,10 @@ export function Step1GeneralInfo() {
         {/* lieuNaissance */}
         <div className="space-y-2">
           <Label htmlFor="lieuNaissance">{t('fields.lieuNaissance')}</Label>
-          <SearchableSelect
-            options={countryOptions}
-            value={values.lieuNaissance}
-            onValueChange={(value) => setValue('lieuNaissance', value)}
-            placeholder={t('fields.lieuNaissance')}
-            searchPlaceholder={t('placeholders.searchCountry')}
-            groupSeparators={separators}
+          <Input
+            id="lieuNaissance"
+            {...register('lieuNaissance')}
+            placeholder={t('placeholders.lieuNaissance')}
             className={errors.lieuNaissance ? 'border-destructive' : ''}
           />
           {errors.lieuNaissance && <p className="text-sm text-destructive">{t((errors.lieuNaissance as WithMessage).message ?? '')}</p>}
@@ -234,6 +236,7 @@ export function Step1GeneralInfo() {
             onValueChange={(value) => setValue('pays', value)}
             placeholder={t('fields.pays')}
             searchPlaceholder={t('placeholders.searchCountry')}
+            emptyMessage={t('validation.noCountryFound')}
             groupSeparators={separators}
             className={errors.pays ? 'border-destructive' : ''}
           />
@@ -243,3 +246,6 @@ export function Step1GeneralInfo() {
     </div>
   );
 }
+
+const pickDate = (o?: EmailExistsResponse['last']): string | undefined =>
+  o?.date_soumission ?? o?.date ?? o?.dateSoumission;
