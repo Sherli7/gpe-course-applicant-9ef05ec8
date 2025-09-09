@@ -33,7 +33,7 @@
     "telephone": "Phone",
     "email": "Email Address",
     "organisation": "Organization",
-    "pays": "Country",
+    "pays": "Country of Residence/Current Country",
     "departement": "Department/Service",
     "descriptionTaches": "Job Description",
     "posteActuel": "Current Position",
