@@ -54,6 +54,7 @@
   "placeholders": {
     "search": "Search...",
     "searchCountry": "Search country...",
+    "searchNationality": "Search nationality...",
     "selectOption": "Select an option",
     "enterText": "Enter your text here...",
     "lieuNaissance": "City, Country"
