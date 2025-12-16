@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFormContext, type FieldError } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,30 @@ export function Step2ProfessionalDetails() {
   const { t } = useTranslation();
   const { register, formState: { errors } } = useFormContext<ApplicationFormData>();
   const errorEntries = Object.entries(errors) as Array<[string, FieldError]>;
+
+  // Refs pour focus automatique
+  const refDepartement = useRef<HTMLInputElement>(null);
+  const refPosteActuel = useRef<HTMLInputElement>(null);
+  const refDescriptionTaches = useRef<HTMLTextAreaElement>(null);
+
+  // Focus automatique sur le premier champ en erreur
+  useEffect(() => {
+    if (errorEntries.length > 0) {
+      const firstErrorField = errorEntries[0][0];
+      const refMap: Record<string, React.RefObject<any>> = {
+        departement: refDepartement,
+        posteActuel: refPosteActuel,
+        descriptionTaches: refDescriptionTaches,
+      };
+      const fieldRef = refMap[firstErrorField];
+      if (fieldRef?.current) {
+        setTimeout(() => {
+          fieldRef.current?.focus();
+          fieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [errorEntries]);
 
   return (
     <div className="space-y-6">
@@ -31,7 +56,7 @@ export function Step2ProfessionalDetails() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="departement">{t('fields.departement')}</Label>
-          <Input id="departement" {...register('departement')}
+          <Input id="departement" ref={refDepartement} {...register('departement')}
                  placeholder={t('fields.departement')}
                  className={errors.departement ? 'border-destructive' : ''} />
           {errors.departement?.message && <p className="text-sm text-destructive">{t(errors.departement.message)}</p>}
@@ -39,7 +64,7 @@ export function Step2ProfessionalDetails() {
 
         <div className="space-y-2">
           <Label htmlFor="posteActuel">{t('fields.posteActuel')}</Label>
-          <Input id="posteActuel" {...register('posteActuel')}
+          <Input id="posteActuel" ref={refPosteActuel} {...register('posteActuel')}
                  placeholder={t('fields.posteActuel')}
                  className={errors.posteActuel ? 'border-destructive' : ''} />
           {errors.posteActuel?.message && <p className="text-sm text-destructive">{t(errors.posteActuel.message)}</p>}
@@ -48,7 +73,7 @@ export function Step2ProfessionalDetails() {
 
       <div className="space-y-2">
         <Label htmlFor="descriptionTaches">{t('fields.descriptionTaches')}</Label>
-        <Textarea id="descriptionTaches" {...register('descriptionTaches')}
+        <Textarea id="descriptionTaches" ref={refDescriptionTaches} {...register('descriptionTaches')}
                   placeholder={t('placeholders.enterText')} rows={4}
                   className={errors.descriptionTaches ? 'border-destructive' : ''} />
         {errors.descriptionTaches?.message && (

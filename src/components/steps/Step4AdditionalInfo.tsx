@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFormContext, type FieldError } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
@@ -10,6 +11,28 @@ export function Step4AdditionalInfo() {
     useFormContext<ApplicationFormData>();
 
   const errorEntries = Object.entries(errors) as Array<[string, FieldError]>;
+
+  // Refs pour focus automatique
+  const refResultatsAttendus = useRef<HTMLTextAreaElement>(null);
+  const refAutresInfos = useRef<HTMLTextAreaElement>(null);
+
+  // Focus automatique sur le premier champ en erreur
+  useEffect(() => {
+    if (errorEntries.length > 0) {
+      const firstErrorField = errorEntries[0][0];
+      const refMap: Record<string, React.RefObject<any>> = {
+        resultatsAttendus: refResultatsAttendus,
+        autresInfos: refAutresInfos,
+      };
+      const fieldRef = refMap[firstErrorField];
+      if (fieldRef?.current) {
+        setTimeout(() => {
+          fieldRef.current?.focus();
+          fieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [errorEntries]);
 
   return (
     <div className="space-y-6">
@@ -34,9 +57,9 @@ export function Step4AdditionalInfo() {
       <div className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="resultatsAttendus">{t('fields.resultatsAttendus')}</Label>
-          <Label htmlFor="resultatsAttendus">{t('fields.resultatsAttendus')}</Label>
           <Textarea
             id="resultatsAttendus"
+            ref={refResultatsAttendus}
             {...register('resultatsAttendus')}
             placeholder={t('placeholders.enterText')}
             rows={4}
@@ -54,6 +77,7 @@ export function Step4AdditionalInfo() {
           </Label>
           <Textarea
             id="autresInfos"
+            ref={refAutresInfos}
             {...register('autresInfos')}
             placeholder={t('placeholders.enterText')}
             rows={4}

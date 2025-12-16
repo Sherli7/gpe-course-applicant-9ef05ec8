@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFormContext } from 'react-hook-form';
 import type { ApplicationFormData } from '@/schemas/applicationSchema';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SearchableSelect } from '@/components/SearchableSelect';
+import { SearchableSelect, type SearchableSelectRef } from '@/components/SearchableSelect';
 import { getCountriesWithPriority, getNationalitiesWithPriority } from '@/data/countries';
 
 type EmailExistsResponse = {
@@ -35,6 +35,44 @@ export function Step1GeneralInfo() {
   const values = watch();
 
   const [emailCheck, setEmailCheck] = useState<EmailCheck>({ status: 'idle' });
+
+  // Refs pour chaque champ (pour le focus automatique)
+  const refNom = useRef<HTMLInputElement>(null);
+  const refPrenom = useRef<HTMLInputElement>(null);
+  const refNationalite = useRef<SearchableSelectRef>(null);
+  const refSexe = useRef<SearchableSelectRef>(null);
+  const refDateNaissance = useRef<HTMLInputElement>(null);
+  const refLieuNaissance = useRef<HTMLInputElement>(null);
+  const refTelephone = useRef<HTMLInputElement>(null);
+  const refEmail = useRef<HTMLInputElement>(null);
+  const refOrganisation = useRef<HTMLInputElement>(null);
+  const refPays = useRef<SearchableSelectRef>(null);
+
+  // Hook pour afficher les erreurs et focus automatique
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      const firstErrorField = Object.keys(errors)[0];
+      const refMap: Record<string, React.RefObject<any>> = {
+        nom: refNom,
+        prenom: refPrenom,
+        nationalite: refNationalite,
+        sexe: refSexe,
+        dateNaissance: refDateNaissance,
+        lieuNaissance: refLieuNaissance,
+        telephone: refTelephone,
+        email: refEmail,
+        organisation: refOrganisation,
+        pays: refPays,
+      };
+      const fieldRef = refMap[firstErrorField];
+      if (fieldRef?.current) {
+        setTimeout(() => {
+          fieldRef.current?.focus();
+          fieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [errors]);
 
   useEffect(() => {
     const raw = (values?.email || '').trim();
@@ -123,14 +161,14 @@ export function Step1GeneralInfo() {
         {/* nom */}
         <div className="space-y-2">
           <Label htmlFor="nom">{t('fields.nom')}</Label>
-          <Input id="nom" {...register('nom')} placeholder={t('fields.nom')} className={errors.nom ? 'border-destructive' : ''} />
+          <Input id="nom" ref={refNom} {...register('nom')} placeholder={t('fields.nom')} className={errors.nom ? 'border-destructive' : ''} />
           {errors.nom && <p className="text-sm text-destructive">{t((errors.nom as WithMessage).message ?? '')}</p>}
         </div>
 
         {/* prenom */}
         <div className="space-y-2">
           <Label htmlFor="prenom">{t('fields.prenom')}</Label>
-          <Input id="prenom" {...register('prenom')} placeholder={t('fields.prenom')} className={errors.prenom ? 'border-destructive' : ''} />
+          <Input id="prenom" ref={refPrenom} {...register('prenom')} placeholder={t('fields.prenom')} className={errors.prenom ? 'border-destructive' : ''} />
           {errors.prenom && <p className="text-sm text-destructive">{t((errors.prenom as WithMessage).message ?? '')}</p>}
         </div>
 
@@ -138,6 +176,7 @@ export function Step1GeneralInfo() {
         <div className="space-y-2">
           <Label htmlFor="nationalite">{t('fields.nationalite')}</Label>
           <SearchableSelect
+            ref={refNationalite}
             options={nationalityOptions}
             value={values.nationalite}
             onValueChange={(value) => setValue('nationalite', value)}
@@ -154,6 +193,7 @@ export function Step1GeneralInfo() {
         <div className="space-y-2">
           <Label htmlFor="sexe">{t('fields.sexe')}</Label>
           <SearchableSelect
+            ref={refSexe}
             options={sexOptions}
             value={values.sexe}
             onValueChange={(value) => setValue('sexe', value as ApplicationFormData['sexe'])}
@@ -168,7 +208,7 @@ export function Step1GeneralInfo() {
         {/* dateNaissance */}
         <div className="space-y-2">
           <Label htmlFor="dateNaissance">{t('fields.dateNaissance')}</Label>
-          <Input id="dateNaissance" type="date" {...register('dateNaissance')} className={errors.dateNaissance ? 'border-destructive' : ''} />
+          <Input id="dateNaissance" type="date" ref={refDateNaissance} {...register('dateNaissance')} className={errors.dateNaissance ? 'border-destructive' : ''} />
           {errors.dateNaissance && <p className="text-sm text-destructive">{t((errors.dateNaissance as WithMessage).message ?? '')}</p>}
         </div>
 
@@ -177,6 +217,7 @@ export function Step1GeneralInfo() {
           <Label htmlFor="lieuNaissance">{t('fields.lieuNaissance')}</Label>
           <Input
             id="lieuNaissance"
+            ref={refLieuNaissance}
             {...register('lieuNaissance')}
             placeholder={t('placeholders.lieuNaissance')}
             className={errors.lieuNaissance ? 'border-destructive' : ''}
@@ -187,7 +228,7 @@ export function Step1GeneralInfo() {
         {/* telephone */}
         <div className="space-y-2">
           <Label htmlFor="telephone">{t('fields.telephone')}</Label>
-          <Input id="telephone" type="tel" {...register('telephone')} placeholder="+237 699 00 00 00" className={errors.telephone ? 'border-destructive' : ''} />
+          <Input id="telephone" type="tel" ref={refTelephone} {...register('telephone')} placeholder="+237 699 00 00 00" className={errors.telephone ? 'border-destructive' : ''} />
           {errors.telephone && <p className="text-sm text-destructive">{t((errors.telephone as WithMessage).message ?? '')}</p>}
         </div>
 
@@ -197,6 +238,7 @@ export function Step1GeneralInfo() {
           <Input
             id="email"
             type="email"
+            ref={refEmail}
             {...register('email')}
             placeholder="exemple@email.com"
             className={errors.email ? 'border-destructive' : ''}
@@ -223,7 +265,7 @@ export function Step1GeneralInfo() {
         {/* organisation */}
         <div className="space-y-2">
           <Label htmlFor="organisation">{t('fields.organisation')}</Label>
-          <Input id="organisation" {...register('organisation')} placeholder={t('fields.organisation')} className={errors.organisation ? 'border-destructive' : ''} />
+          <Input id="organisation" ref={refOrganisation} {...register('organisation')} placeholder={t('fields.organisation')} className={errors.organisation ? 'border-destructive' : ''} />
           {errors.organisation && <p className="text-sm text-destructive">{t((errors.organisation as WithMessage).message ?? '')}</p>}
         </div>
 
@@ -231,6 +273,7 @@ export function Step1GeneralInfo() {
         <div className="space-y-2">
           <Label htmlFor="pays">{t('fields.pays')}</Label>
           <SearchableSelect
+            ref={refPays}
             options={countryOptions}
             value={values.pays}
             onValueChange={(value) => setValue('pays', value)}
