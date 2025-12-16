@@ -6,6 +6,7 @@ import {
   ApplicationFormData,
   step1Schema, step2Schema, step3Schema, step4Schema, step5Schema
 } from '@/schemas/applicationSchema';
+import { mapFormToBackend } from '@/lib/formMappers';
 import { Header } from '@/components/Header';
 import { Stepper } from '@/components/Stepper';
 import { Step1GeneralInfo } from '@/components/steps/Step1GeneralInfo';
@@ -130,11 +131,14 @@ export default function ApplicationForm() {
   const onSubmit: SubmitHandler<ApplicationFormData> = async (data) => {
     setIsSubmitting(true);
     try {
+      // Map frontend form data (camelCase FR) to backend API format (English)
+      const payload = mapFormToBackend(data);
+      
       const response = await fetch(`${API_BASE}/candidatures`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         credentials: 'include',
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
       });
 
       if (response.status === 409) {
