@@ -37,7 +37,6 @@
     "organisation": "Organization",
     "pays": "Country",
     "departement": "Department/Service",
-    "posteActuel": "Current Position",
     "descriptionTaches": "Job Description",
     "posteActuel": "Current Position",
     "diplome": "Highest Degree",
@@ -75,10 +74,6 @@
     "langues": {
       "Français": "French",
       "Anglais": "English",
-      "Espagnol": "Spanish", 
-      "Portugais": "Portuguese",
-      "Arabe": "Arabic",
-      "Chinois": "Chinese"
     },
     "niveaux": {
       "Débutant": "Beginner",

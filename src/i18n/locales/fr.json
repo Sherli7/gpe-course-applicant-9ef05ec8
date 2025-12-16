@@ -37,7 +37,6 @@
     "organisation": "Organisation",
     "pays": "Pays",
     "departement": "Département/Service",
-    "posteActuel": "Poste actuel",
     "descriptionTaches": "Description des tâches",
     "posteActuel": "Poste actuel",
     "diplome": "Diplôme le plus élevé",
@@ -75,10 +74,6 @@
     "langues": {
       "Français": "Français",
       "Anglais": "Anglais",
-      "Espagnol": "Espagnol",
-      "Portugais": "Portugais",
-      "Arabe": "Arabe",
-      "Chinois": "Chinois"
     },
     "niveaux": {
       "Débutant": "Débutant",
