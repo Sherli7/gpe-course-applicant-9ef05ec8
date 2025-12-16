@@ -17,8 +17,6 @@ import { Step6Summary } from '@/components/steps/Step6Summary';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-
-const TOTAL_STEPS = 6;
 const DRAFT_STORAGE_KEY = 'application-draft';
 const API_BASE = 'https://gpe-yale.edocsflow.com/api';
 
@@ -41,6 +39,7 @@ export default function ApplicationForm() {
   const [completedSteps, setCompletedSteps] = useState<Record<number, boolean>>({});
   const [stepErrors, setStepErrors] = useState<Record<number, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const totalSteps = stepSchemas.length;
 
   // Valeurs par défaut conformes au backend
   const defaultValues: Partial<ApplicationFormData> = {
@@ -100,7 +99,7 @@ export default function ApplicationForm() {
 
   const handleNext = async () => {
     const ok = await validateCurrentStep();
-    if (ok && currentStep < TOTAL_STEPS) setCurrentStep((s) => s + 1);
+    if (ok && currentStep < totalSteps) setCurrentStep((s) => s + 1);
   };
 
   const handlePrevious = () => { if (currentStep > 1) setCurrentStep((s) => s - 1); };
@@ -191,7 +190,7 @@ export default function ApplicationForm() {
 
         <Card className="rounded-2xl shadow-lg">
           <CardContent className="p-8">
-            <Stepper currentStep={currentStep} totalSteps={TOTAL_STEPS} errors={stepErrors} completedSteps={completedSteps} />
+            <Stepper currentStep={currentStep} totalSteps={totalSteps} errors={stepErrors} completedSteps={completedSteps} />
 
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -202,7 +201,7 @@ export default function ApplicationForm() {
                     {t('navigation.previous')}
                   </Button>
 
-                  {currentStep < TOTAL_STEPS ? (
+                  {currentStep < totalSteps ? (
                     <Button type="button" onClick={handleNext}>{t('navigation.next')}</Button>
                   ) : (
                     <Button type="submit" disabled={isSubmitting}>
