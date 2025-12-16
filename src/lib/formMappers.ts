@@ -55,7 +55,7 @@ export function mapFormToBackend(data: ApplicationFormData): BackendCandidatureP
     fundingSource: data.mode ? [data.mode] : [],
     institutionName: data.institutionFinancement ?? '',
     contactPerson: data.contactFinancement ?? '',
-    contactEmail: data.emailContactFinancement ?? null,
+    contactEmail: data.emailContactFinancement ? data.emailContactFinancement : null,
     informationSource: data.source,
     consent: data.consentement,
   };
