@@ -164,7 +164,6 @@ export default function ApplicationForm() {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         credentials: 'include',
         body: JSON.stringify(payload)
-        body: JSON.stringify(payload)
       });
 
       if (response.status === 409) {
