@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -33,6 +33,8 @@ interface SearchableSelectProps {
   groupSeparators?: { [key: string]: string };
 }
 
+export type SearchableSelectRef = HTMLButtonElement;
+
 function normalizeString(str: string): string {
   return str
     .normalize('NFD') // Décomposer les caractères accentués
@@ -40,17 +42,18 @@ function normalizeString(str: string): string {
     .toLowerCase();
 }
 
-export function SearchableSelect({
-  options,
-  value,
-  onValueChange,
-  placeholder,
-  searchPlaceholder,
-  emptyMessage,
-  className,
-  disabled = false,
-  groupSeparators,
-}: SearchableSelectProps) {
+export const SearchableSelect = forwardRef<SearchableSelectRef, SearchableSelectProps>(
+  function SearchableSelect({
+    options,
+    value,
+    onValueChange,
+    placeholder,
+    searchPlaceholder,
+    emptyMessage,
+    className,
+    disabled = false,
+    groupSeparators,
+  }: SearchableSelectProps, ref) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -151,6 +154,7 @@ export function SearchableSelect({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          ref={ref}
           variant="outline"
           role="combobox"
           aria-expanded={open}
@@ -179,3 +183,4 @@ export function SearchableSelect({
     </Popover>
   );
 }
+);

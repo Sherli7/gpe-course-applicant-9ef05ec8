@@ -54,6 +54,7 @@
   "placeholders": {
     "search": "Rechercher...",
     "searchCountry": "Rechercher un pays...",
+    "searchNationality": "Rechercher une nationalité...",
     "selectOption": "Sélectionner une option",
     "enterText": "Saisissez votre texte ici...",
     "lieuNaissance": "Ville, Pays"
@@ -104,6 +105,7 @@
     "required": "Ce champ est requis",
     "email": "Format d'email invalide",
     "phone": "Format de téléphone invalide (ex: +237 699 00 00 00)",
+    "invalidDate": "Format de date invalide",
     "minAge": "Vous devez avoir au moins 18 ans",
     "languageLevel": "Veuillez indiquer le niveau pour chaque langue sélectionnée",
     "errors": "Veuillez corriger les erreurs suivantes :",

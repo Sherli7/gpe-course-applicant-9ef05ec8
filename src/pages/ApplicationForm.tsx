@@ -7,6 +7,7 @@ import {
   step1Schema, step2Schema, step3Schema, step4Schema, step5Schema
 } from '@/schemas/applicationSchema';
 import { mapFormToBackend } from '@/lib/formMappers';
+import { mapFormToBackend } from '@/lib/formMappers';
 import { Header } from '@/components/Header';
 import { Stepper } from '@/components/Stepper';
 import { Step1GeneralInfo } from '@/components/steps/Step1GeneralInfo';
@@ -163,6 +164,7 @@ export default function ApplicationForm() {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         credentials: 'include',
         body: JSON.stringify(payload)
+        body: JSON.stringify(payload)
       });
 
       if (response.status === 409) {
@@ -219,12 +221,10 @@ export default function ApplicationForm() {
           (isRecord(resultUnknown) && typeof resultUnknown.message === 'string'
             ? resultUnknown.message
             : response.statusText) || 'Submission failed';
-
         const details =
           isRecord(resultUnknown) && Array.isArray(resultUnknown.details)
             ? `\n- ${resultUnknown.details.join('\n- ')}`
             : '';
-
         toast({ title: t('errors.server'), description: `${message}${details}`, variant: 'destructive' });
       }
     } catch {

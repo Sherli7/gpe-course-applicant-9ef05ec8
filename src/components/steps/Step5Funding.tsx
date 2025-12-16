@@ -1,9 +1,10 @@
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFormContext, type FieldError } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { SearchableSelect } from '@/components/SearchableSelect';
+import { SearchableSelect, type SearchableSelectRef } from '@/components/SearchableSelect';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { ApplicationFormData, Mode } from '@/schemas/applicationSchema';
 
@@ -16,6 +17,34 @@ export function Step5Funding() {
   const fundingMethod = values.mode;
   const needsFundingDetails = fundingMethod !== 'Vous-même';
   const errorEntries = Object.entries(errors) as Array<[string, FieldError]>;
+
+  // Refs pour focus automatique
+  const refInstitutionFinancement = useRef<HTMLInputElement>(null);
+  const refContactFinancement = useRef<HTMLInputElement>(null);
+  const refEmailContactFinancement = useRef<HTMLInputElement>(null);
+  const refSource = useRef<SearchableSelectRef>(null);
+  const refConsentement = useRef<HTMLInputElement>(null);
+
+  // Focus automatique sur le premier champ en erreur
+  useEffect(() => {
+    if (errorEntries.length > 0) {
+      const firstErrorField = errorEntries[0][0];
+      const refMap: Record<string, React.RefObject<any>> = {
+        institutionFinancement: refInstitutionFinancement,
+        contactFinancement: refContactFinancement,
+        emailContactFinancement: refEmailContactFinancement,
+        source: refSource,
+        consentement: refConsentement,
+      };
+      const fieldRef = refMap[firstErrorField];
+      if (fieldRef?.current) {
+        setTimeout(() => {
+          fieldRef.current?.focus();
+          fieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [errorEntries]);
 
   const fundingOptions: Array<{ value: Mode; label: string }> = [
     { value: 'Vous-même', label: t('options.financement.Vous-même', 'Vous-même') },
@@ -80,6 +109,7 @@ export function Step5Funding() {
               </Label>
               <Input
                 id="institutionFinancement"
+                ref={refInstitutionFinancement}
                 {...register('institutionFinancement')}
                 placeholder={t('fields.institutionFinancement')}
                 className={errors.institutionFinancement ? 'border-destructive' : ''}
@@ -97,6 +127,7 @@ export function Step5Funding() {
               </Label>
               <Input
                 id="contactFinancement"
+                ref={refContactFinancement}
                 {...register('contactFinancement')}
                 placeholder={t('fields.contactFinancement')}
                 className={errors.contactFinancement ? 'border-destructive' : ''}
@@ -115,6 +146,7 @@ export function Step5Funding() {
               <Input
                 id="emailContactFinancement"
                 type="email"
+                ref={refEmailContactFinancement}
                 {...register('emailContactFinancement')}
                 placeholder="contact@organisation.com"
                 className={errors.emailContactFinancement ? 'border-destructive' : ''}
@@ -132,6 +164,7 @@ export function Step5Funding() {
         <div className="space-y-2">
           <Label htmlFor="source">{t('fields.source')}</Label>
           <SearchableSelect
+            ref={refSource}
             options={sourceOptions}
             value={values.source}
             onValueChange={(v) => setValue('source', v, { shouldValidate: true })}
@@ -147,6 +180,7 @@ export function Step5Funding() {
         <div className="flex items-start space-x-2 p-4 border rounded-lg">
           <Checkbox
             id="consentement"
+            ref={refConsentement}
             checked={values.consentement}
             onCheckedChange={(checked) =>
               setValue('consentement', checked === true, { shouldValidate: true })

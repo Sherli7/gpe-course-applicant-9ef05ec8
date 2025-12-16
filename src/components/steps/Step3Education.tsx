@@ -1,8 +1,9 @@
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFormContext, type FieldError } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SearchableSelect } from '@/components/SearchableSelect';
+import { SearchableSelect, type SearchableSelectRef } from '@/components/SearchableSelect';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { ApplicationFormData } from '@/schemas/applicationSchema';
 
@@ -29,6 +30,31 @@ export function Step3Education() {
   const values = watch();
   const selectedLanguages: string[] = values.langues ?? [];
   const languageLevels: LanguageLevels = (values.niveaux ?? {}) as LanguageLevels;
+
+  // Refs pour focus automatique
+  const refDiplome = useRef<SearchableSelectRef>(null);
+  const refInstitution = useRef<HTMLInputElement>(null);
+  const refDomaine = useRef<HTMLInputElement>(null);
+
+  // Focus automatique sur le premier champ en erreur
+  useEffect(() => {
+    const errorEntries = Object.entries(errors) as Array<[string, FieldError]>;
+    if (errorEntries.length > 0) {
+      const firstErrorField = errorEntries[0][0];
+      const refMap: Record<string, React.RefObject<any>> = {
+        diplome: refDiplome,
+        institution: refInstitution,
+        domaine: refDomaine,
+      };
+      const fieldRef = refMap[firstErrorField];
+      if (fieldRef?.current) {
+        setTimeout(() => {
+          fieldRef.current?.focus();
+          fieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [errors]);
 
   const diplomeOptions = [
     { value: 'Baccalauréat', label: t('options.diplomes.Baccalauréat') },
@@ -94,6 +120,7 @@ export function Step3Education() {
         <div className="space-y-2">
           <Label htmlFor="diplome">{t('fields.diplome')}</Label>
           <SearchableSelect
+            ref={refDiplome}
             options={diplomeOptions}
             value={values.diplome}
             onValueChange={(v) => setValue('diplome', v, { shouldValidate: true })}
@@ -109,6 +136,7 @@ export function Step3Education() {
           <Label htmlFor="institution">{t('fields.institution')}</Label>
           <Input
             id="institution"
+            ref={refInstitution}
             {...register('institution')}
             placeholder={t('fields.institution')}
             className={errors.institution ? 'border-destructive' : ''}
@@ -122,6 +150,7 @@ export function Step3Education() {
           <Label htmlFor="domaine">{t('fields.domaine')}</Label>
           <Input
             id="domaine"
+            ref={refDomaine}
             {...register('domaine')}
             placeholder={t('fields.domaine')}
             className={errors.domaine ? 'border-destructive' : ''}
