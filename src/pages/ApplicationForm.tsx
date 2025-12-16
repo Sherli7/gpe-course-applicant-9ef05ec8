@@ -6,6 +6,7 @@ import {
   ApplicationFormData,
   step1Schema, step2Schema, step3Schema, step4Schema, step5Schema
 } from '@/schemas/applicationSchema';
+import { mapFormToBackend } from '@/lib/formMappers';
 import { Header } from '@/components/Header';
 import { Stepper } from '@/components/Stepper';
 import { Step1GeneralInfo } from '@/components/steps/Step1GeneralInfo';
@@ -32,6 +33,51 @@ type BackendResp = BackendOk | BackendFail;
 const hasBooleanSuccess = (v: unknown): v is BackendResp =>
   isRecord(v) && 'success' in v && typeof (v as { success: unknown }).success === 'boolean';
 
+type BackendValidationItem = {
+  property?: string;
+  constraints?: Record<string, string>;
+};
+
+const backendToFrontendField: Record<string, { field: keyof ApplicationFormData; step: number }> = {
+  firstName: { field: 'prenom', step: 1 },
+  lastName: { field: 'nom', step: 1 },
+  nationality: { field: 'nationalite', step: 1 },
+  gender: { field: 'sexe', step: 1 },
+  dateOfBirth: { field: 'dateNaissance', step: 1 },
+  placeOfBirth: { field: 'lieuNaissance', step: 1 },
+  phoneNumber: { field: 'telephone', step: 1 },
+  email: { field: 'email', step: 1 },
+  organization: { field: 'organisation', step: 1 },
+  country: { field: 'pays', step: 1 },
+
+  department: { field: 'departement', step: 2 },
+  currentPosition: { field: 'posteActuel', step: 2 },
+  taskDescription: { field: 'descriptionTaches', step: 2 },
+
+  diploma: { field: 'diplome', step: 3 },
+  institution: { field: 'institution', step: 3 },
+  field: { field: 'domaine', step: 3 },
+  languages: { field: 'langues', step: 3 },
+  languageLevels: { field: 'niveaux', step: 3 },
+
+  expectedResults: { field: 'resultatsAttendus', step: 4 },
+  otherInformation: { field: 'autresInfos', step: 4 },
+
+  fundingSource: { field: 'mode', step: 5 },
+  institutionName: { field: 'institutionFinancement', step: 5 },
+  contactPerson: { field: 'contactFinancement', step: 5 },
+  contactEmail: { field: 'emailContactFinancement', step: 5 },
+  informationSource: { field: 'source', step: 5 },
+  consent: { field: 'consentement', step: 5 },
+};
+
+const mapConstraintToMessageKey = (constraint: string): string => {
+  if (constraint === 'isNotEmpty') return 'validation.required';
+  if (constraint === 'isDateString') return 'validation.invalidDate';
+  if (constraint === 'isEmail') return 'validation.email';
+  return 'validation.errors';
+};
+
 export default function ApplicationForm() {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -47,7 +93,7 @@ export default function ApplicationForm() {
     dateNaissance: '', lieuNaissance: '', telephone: '', email: '',
     organisation: '', pays: '',
     departement: '', posteActuel: '', descriptionTaches: '',
-    diplome: '', domaine: '',
+    diplome: '', institution: '', domaine: '',
     langues: [], niveaux: {},
     resultatsAttendus: '', autresInfos: '',
     mode: 'Vous-même',
@@ -110,11 +156,13 @@ export default function ApplicationForm() {
   const onSubmit: SubmitHandler<ApplicationFormData> = async (data) => {
     setIsSubmitting(true);
     try {
+      const payload = mapFormToBackend(data);
+
       const response = await fetch(`${API_BASE}/candidatures`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         credentials: 'include',
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
       });
 
       if (response.status === 409) {
@@ -138,6 +186,35 @@ export default function ApplicationForm() {
         setCompletedSteps({});
         setStepErrors({});
       } else {
+        // Try to parse structured validation errors from backend
+        if (isRecord(resultUnknown) && Array.isArray(resultUnknown.details)) {
+          const items = resultUnknown.details as unknown[];
+          const mapped: Array<{ field: keyof ApplicationFormData; step: number; message: string }> = [];
+          for (const it of items) {
+            const obj = it as BackendValidationItem;
+            const prop = obj?.property ?? '';
+            const map = backendToFrontendField[prop];
+            if (!map) continue;
+            let msg = '';
+            const cons = obj?.constraints;
+            if (cons && typeof cons === 'object') {
+              const firstKey = Object.keys(cons)[0];
+              if (firstKey) msg = t(mapConstraintToMessageKey(firstKey), cons[firstKey]);
+            }
+            mapped.push({ field: map.field, step: map.step, message: msg || t('validation.errors') });
+          }
+          if (mapped.length > 0) {
+            mapped.forEach(({ field, message }) => {
+              setError(field as FieldPath<ApplicationFormData>, { type: 'server', message });
+            });
+            const first = mapped[0];
+            setCurrentStep(first.step);
+            setStepErrors((p) => ({ ...p, [first.step]: true }));
+            toast({ title: t('validation.errors'), description: t('errors.validation'), variant: 'destructive' });
+            return;
+          }
+        }
+
         const message =
           (isRecord(resultUnknown) && typeof resultUnknown.message === 'string'
             ? resultUnknown.message
