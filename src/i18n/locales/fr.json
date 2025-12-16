@@ -1,6 +1,6 @@
 {
   "header": {
-    "title": "Candidature GPE-Yale",
+    "title": "Candidature Proramme GPE-Yale GHLI",
     "language": "Langue"
   },
   "stepper": {
@@ -30,12 +30,10 @@
     "sexe": "Sexe",
     "dateNaissance": "Date de naissance",
     "lieuNaissance": "Lieu de naissance",
-    "dateNaissance": "Date de naissance",
-    "lieuNaissance": "Lieu de naissance",
     "telephone": "Téléphone",
     "email": "Adresse email",
     "organisation": "Organisation",
-    "pays": "Pays",
+    "pays": "Pays de résidence/Pays actuel",
     "departement": "Département/Service",
     "descriptionTaches": "Description des tâches",
     "posteActuel": "Poste actuel",
@@ -46,7 +44,7 @@
     "niveaux": "Niveau de maîtrise",
     "resultatsAttendus": "Résultats attendus",
     "autresInfos": "Autres informations",
-    "modeFinancement": "Mode de financement",
+    "mode": "Mode de financement",
     "institutionFinancement": "Institution de financement",
     "contactFinancement": "Contact de financement", 
     "emailContactFinancement": "Email du contact",
@@ -57,7 +55,8 @@
     "search": "Rechercher...",
     "searchCountry": "Rechercher un pays...",
     "selectOption": "Sélectionner une option",
-    "enterText": "Saisissez votre texte ici..."
+    "enterText": "Saisissez votre texte ici...",
+    "lieuNaissance": "Ville, Pays"
   },
   "options": {
     "sexe": {
@@ -73,7 +72,7 @@
     },
     "langues": {
       "Français": "Français",
-      "Anglais": "Anglais",
+      "Anglais": "Anglais"
     },
     "niveaux": {
       "Débutant": "Débutant",
@@ -84,9 +83,7 @@
     },
     "financement": {
       "Vous-même": "Vous-même",
-      "Employeur": "Employeur", 
-      "Bourse": "Bourse d'études",
-      "Organisme public": "Organisme public",
+      "Institution": "Institution",
       "Autre": "Autre"
     },
     "sources": {
@@ -109,7 +106,8 @@
     "phone": "Format de téléphone invalide (ex: +237 699 00 00 00)",
     "minAge": "Vous devez avoir au moins 18 ans",
     "languageLevel": "Veuillez indiquer le niveau pour chaque langue sélectionnée",
-    "errors": "Veuillez corriger les erreurs suivantes :"
+    "errors": "Veuillez corriger les erreurs suivantes :",
+    "noResults": "Aucun résultat trouvé"
   },
   "confirmation": {
     "title": "Candidature envoyée avec succès !",

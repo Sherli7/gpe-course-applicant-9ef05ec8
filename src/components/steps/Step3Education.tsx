@@ -1,38 +1,41 @@
 import { useTranslation } from 'react-i18next';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, type FieldError } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SearchableSelect } from '@/components/SearchableSelect';
 import { Checkbox } from '@/components/ui/checkbox';
-
-type FieldErrorLike = { message?: string };
-const hasMessage = (e: unknown): e is FieldErrorLike =>
-  typeof e === 'object' && e !== null && typeof (e as FieldErrorLike).message === 'string';
+import type { ApplicationFormData } from '@/schemas/applicationSchema';
 
 const LEVELS = ['Débutant', 'Intermédiaire', 'Avancé', 'Natif'] as const;
 type Level = typeof LEVELS[number];
-const DEFAULT_LEVEL: Level = 'Intermédiaire';
-const isLevel = (x: string): x is Level => LEVELS.includes(x as Level);
+type LanguageLevels = Record<string, Level>;
 
-const normalizeLevel = (level: string): Level => {
-  if (level === 'Courant') return 'Avancé'; // compat ancienne valeur
-  return isLevel(level) ? level : DEFAULT_LEVEL;
-};
+const DEFAULT_LEVEL: Level = 'Intermédiaire';
+const isLevel = (x: string): x is Level => (LEVELS as readonly string[]).includes(x);
+
+/** Normalise toute entrée en Level strict (et mappe "Courant" -> "Avancé") */
+const normalizeLevel = (level: string): Level =>
+  level === 'Courant' ? 'Avancé' : isLevel(level) ? level : DEFAULT_LEVEL;
 
 export function Step3Education() {
   const { t } = useTranslation();
-  const { register, setValue, watch, formState: { errors } } = useFormContext();
+  const {
+    register,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useFormContext<ApplicationFormData>();
 
   const values = watch();
-  const selectedLanguages: string[] = values.languages || [];
-  const languageLevels: Record<string, string> = values.languageLevels || {};
+  const selectedLanguages: string[] = values.langues ?? [];
+  const languageLevels: LanguageLevels = (values.niveaux ?? {}) as LanguageLevels;
 
   const diplomeOptions = [
     { value: 'Baccalauréat', label: t('options.diplomes.Baccalauréat') },
     { value: 'BTS/DUT', label: t('options.diplomes.BTS/DUT') },
     { value: 'Licence', label: t('options.diplomes.Licence') },
     { value: 'Master/MBA', label: t('options.diplomes.Master/MBA') },
-    { value: 'Doctorat', label: t('options.diplomes.Doctorat') }
+    { value: 'Doctorat', label: t('options.diplomes.Doctorat') },
   ];
 
   const languageOptions = [
@@ -40,75 +43,65 @@ export function Step3Education() {
     { value: 'Anglais', label: t('options.langues.Anglais') },
   ];
 
-  // sans "Courant" (non accepté par le backend)
-  const levelOptions = [
-    { value: 'Débutant',      label: t('options.niveaux.Débutant') },
-    { value: 'Intermédiaire', label: t('options.niveaux.Intermédiaire') },
-    { value: 'Avancé',        label: t('options.niveaux.Avancé') },
-    { value: 'Natif',         label: t('options.niveaux.Natif') }
-  ];
+  const levelOptions = LEVELS.map((lv) => ({ value: lv, label: t(`options.niveaux.${lv}`) }));
+  const errorEntries = Object.entries(errors) as Array<[string, FieldError]>;
 
   const handleLanguageChange = (language: string, checked: boolean) => {
     if (checked) {
       const newLanguages = Array.from(new Set([...selectedLanguages, language]));
-      setValue('languages', newLanguages, { shouldValidate: true });
+      setValue('langues', newLanguages, { shouldValidate: true });
 
       const current = languageLevels[language];
       const normalized = current ? normalizeLevel(current) : DEFAULT_LEVEL;
-      setValue('languageLevels', { ...languageLevels, [language]: normalized }, { shouldValidate: true });
+      const updated: LanguageLevels = { ...languageLevels, [language]: normalized };
+      setValue('niveaux', updated, { shouldValidate: true });
     } else {
       const newLanguages = selectedLanguages.filter((l) => l !== language);
-      const newLevels = { ...languageLevels };
+      const newLevels: LanguageLevels = { ...languageLevels };
       delete newLevels[language];
-      setValue('languages', newLanguages, { shouldValidate: true });
-      setValue('languageLevels', newLevels, { shouldValidate: true });
+      setValue('langues', newLanguages, { shouldValidate: true });
+      setValue('niveaux', newLevels, { shouldValidate: true });
     }
   };
 
   const handleLevelChange = (language: string, level: string) => {
     const normalized = normalizeLevel(level);
-    setValue('languageLevels', { ...languageLevels, [language]: normalized }, { shouldValidate: true });
+    const updated: LanguageLevels = { ...languageLevels, [language]: normalized };
+    setValue('niveaux', updated, { shouldValidate: true });
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t('stepper.step3')}
-        </h2>
+        <h2 className="text-2xl font-bold text-foreground mb-2">{t('stepper.step3')}</h2>
         <p className="text-muted-foreground">
           Informations sur votre parcours éducatif et vos compétences linguistiques.
         </p>
       </div>
 
-      {Object.keys(errors).length > 0 && (
+      {errorEntries.length > 0 && (
         <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-          <p className="text-sm font-medium text-destructive mb-2">
-            {t('validation.errors')}
-          </p>
+          <p className="text-sm font-medium text-destructive mb-2">{t('validation.errors')}</p>
           <ul className="text-sm text-destructive space-y-1">
-            {Object.entries(errors).map(([field, err]) => {
-              const msg = hasMessage(err) ? err.message : 'validation.required';
-              return <li key={field}>• {t(msg)}</li>;
-            })}
+            {errorEntries.map(([field, err]) => (
+              <li key={field}>• {t(err.message ?? 'validation.required')}</li>
+            ))}
           </ul>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="diploma">{t('fields.diplome')}</Label>
+          <Label htmlFor="diplome">{t('fields.diplome')}</Label>
           <SearchableSelect
             options={diplomeOptions}
-            value={values.diploma}
-            onValueChange={(value) => setValue('diploma', value, { shouldValidate: true })}
+            value={values.diplome}
+            onValueChange={(v) => setValue('diplome', v, { shouldValidate: true })}
             placeholder={t('fields.diplome')}
-            className={errors.diploma ? 'border-destructive' : ''}
+            className={errors.diplome ? 'border-destructive' : ''}
           />
-          {errors.diploma && (
-            <p className="text-sm text-destructive">
-              {t(hasMessage(errors.diploma) ? errors.diploma.message! : 'validation.required')}
-            </p>
+          {errors.diplome?.message && (
+            <p className="text-sm text-destructive">{t(errors.diplome.message)}</p>
           )}
         </div>
 
@@ -120,25 +113,21 @@ export function Step3Education() {
             placeholder={t('fields.institution')}
             className={errors.institution ? 'border-destructive' : ''}
           />
-          {errors.institution && (
-            <p className="text-sm text-destructive">
-              {t(hasMessage(errors.institution) ? errors.institution.message! : 'validation.required')}
-            </p>
+          {errors.institution?.message && (
+            <p className="text-sm text-destructive">{t(errors.institution.message)}</p>
           )}
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="field">{t('fields.domaine')}</Label>
+          <Label htmlFor="domaine">{t('fields.domaine')}</Label>
           <Input
-            id="field"
-            {...register('field')}
+            id="domaine"
+            {...register('domaine')}
             placeholder={t('fields.domaine')}
-            className={errors.field ? 'border-destructive' : ''}
+            className={errors.domaine ? 'border-destructive' : ''}
           />
-          {errors.field && (
-            <p className="text-sm text-destructive">
-              {t(hasMessage(errors.field) ? errors.field.message! : 'validation.required')}
-            </p>
+          {errors.domaine?.message && (
+            <p className="text-sm text-destructive">{t(errors.domaine.message)}</p>
           )}
         </div>
       </div>
@@ -172,7 +161,7 @@ export function Step3Education() {
                     <SearchableSelect
                       options={levelOptions}
                       value={normalizeLevel(languageLevels[lang.value] || DEFAULT_LEVEL)}
-                      onValueChange={(value) => handleLevelChange(lang.value, value)}
+                      onValueChange={(v) => handleLevelChange(lang.value, v)}
                       placeholder={t('placeholders.selectOption')}
                     />
                   </div>
@@ -182,14 +171,14 @@ export function Step3Education() {
           })}
         </div>
 
-        {errors.languages && (
-          <p className="text-sm text-destructive">
-            {t(hasMessage(errors.languages) ? errors.languages.message! : 'validation.required')}
-          </p>
+        {errors.langues?.message && (
+          <p className="text-sm text-destructive">{t(errors.langues.message)}</p>
         )}
-        {errors.languageLevels && (
+        {errors.niveaux?.message && (
           <p className="text-sm text-destructive">
-            {t(hasMessage(errors.languageLevels) ? errors.languageLevels.message! : 'validation.required')}
+            {typeof errors.niveaux.message === 'string'
+              ? t(errors.niveaux.message)
+              : t('validation.required')}
           </p>
         )}
       </div>

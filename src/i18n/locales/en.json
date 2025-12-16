@@ -1,6 +1,6 @@
 {
   "header": {
-    "title": "GPE-Yale Application",
+    "title": "EPM Programm-Yale GHLI Application",
     "language": "Language"
   },
   "stepper": {
@@ -30,12 +30,10 @@
     "sexe": "Gender",
     "dateNaissance": "Date of Birth",
     "lieuNaissance": "Place of Birth",
-    "dateNaissance": "Date of Birth",
-    "lieuNaissance": "Place of Birth",
     "telephone": "Phone",
     "email": "Email Address",
     "organisation": "Organization",
-    "pays": "Country",
+    "pays": "Country of Residence/Current Country",
     "departement": "Department/Service",
     "descriptionTaches": "Job Description",
     "posteActuel": "Current Position",
@@ -46,7 +44,7 @@
     "niveaux": "Proficiency Level",
     "resultatsAttendus": "Expected Results", 
     "autresInfos": "Additional Information",
-    "modeFinancement": "Funding Method",
+    "mode": "Funding Method",
     "institutionFinancement": "Funding Institution",
     "contactFinancement": "Funding Contact",
     "emailContactFinancement": "Contact Email",
@@ -57,7 +55,8 @@
     "search": "Search...",
     "searchCountry": "Search country...",
     "selectOption": "Select an option",
-    "enterText": "Enter your text here..."
+    "enterText": "Enter your text here...",
+    "lieuNaissance": "City, Country"
   },
   "options": {
     "sexe": {
@@ -73,20 +72,18 @@
     },
     "langues": {
       "Français": "French",
-      "Anglais": "English",
+      "Anglais": "English"
     },
     "niveaux": {
       "Débutant": "Beginner",
       "Intermédiaire": "Intermediate",
-      "Avancé": "Advanced", 
+      "Avancé": "Advanced",
       "Courant": "Fluent",
       "Natif": "Native"
     },
     "financement": {
       "Vous-même": "Self-funded",
-      "Employeur": "Employer",
-      "Bourse": "Scholarship",
-      "Organisme public": "Public Organization", 
+      "Institution": "Institution",
       "Autre": "Other"
     },
     "sources": {
@@ -109,7 +106,8 @@
     "phone": "Invalid phone format (ex: +237 699 00 00 00)",
     "minAge": "You must be at least 18 years old",
     "languageLevel": "Please indicate the level for each selected language",
-    "errors": "Please correct the following errors:"
+    "errors": "Please correct the following errors:",
+    "noResults": "No result found"
   },
   "confirmation": {
     "title": "Application Submitted Successfully!",
