@@ -32,6 +32,26 @@ type BackendResp = BackendOk | BackendFail;
 const hasBooleanSuccess = (v: unknown): v is BackendResp =>
   isRecord(v) && 'success' in v && typeof (v as { success: unknown }).success === 'boolean';
 
+type BackendValidationItem = {
+  property?: string;
+  constraints?: Record<string, string>;
+};
+
+const backendToFrontendField: Record<string, { field: keyof ApplicationFormData; step: number }> = {
+  dateOfBirth: { field: 'dateNaissance', step: 1 },
+  placeOfBirth: { field: 'lieuNaissance', step: 1 },
+  currentPosition: { field: 'posteActuel', step: 2 },
+  taskDescription: { field: 'descriptionTaches', step: 2 },
+  expectedResults: { field: 'resultatsAttendus', step: 4 },
+  informationSource: { field: 'source', step: 5 },
+};
+
+const mapConstraintToMessageKey = (constraint: string): string => {
+  if (constraint === 'isNotEmpty') return 'validation.required';
+  if (constraint === 'isDateString') return 'validation.invalidDate';
+  return 'validation.errors';
+};
+
 export default function ApplicationForm() {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -138,16 +158,45 @@ export default function ApplicationForm() {
         setCompletedSteps({});
         setStepErrors({});
       } else {
+        // Try to parse structured validation errors from backend
+        if (isRecord(resultUnknown) && Array.isArray(resultUnknown.details)) {
+          const items = resultUnknown.details as unknown[];
+          const mapped: Array<{ field: keyof ApplicationFormData; step: number; message: string }> = [];
+          for (const it of items) {
+            const obj = it as BackendValidationItem;
+            const prop = obj?.property ?? '';
+            const map = backendToFrontendField[prop];
+            if (!map) continue;
+            let msg = '';
+            const cons = obj?.constraints;
+            if (cons && typeof cons === 'object') {
+              const firstKey = Object.keys(cons)[0];
+              if (firstKey) msg = t(mapConstraintToMessageKey(firstKey), cons[firstKey]);
+            }
+            mapped.push({ field: map.field, step: map.step, message: msg || t('validation.errors') });
+          }
+          if (mapped.length > 0) {
+            // Set errors in form and jump to the first errored step
+            mapped.forEach(({ field, message }) => {
+              setError(field as FieldPath<ApplicationFormData>, { type: 'server', message });
+            });
+            const first = mapped[0];
+            setCurrentStep(first.step);
+            setStepErrors((p) => ({ ...p, [first.step]: true }));
+            toast({ title: t('validation.errors'), description: t('errors.validation'), variant: 'destructive' });
+            return;
+          }
+        }
+
+        // Fallback: generic server error toast with optional message and details
         const message =
           (isRecord(resultUnknown) && typeof resultUnknown.message === 'string'
             ? resultUnknown.message
             : response.statusText) || 'Submission failed';
-
         const details =
           isRecord(resultUnknown) && Array.isArray(resultUnknown.details)
             ? `\n- ${resultUnknown.details.join('\n- ')}`
             : '';
-
         toast({ title: t('errors.server'), description: `${message}${details}`, variant: 'destructive' });
       }
     } catch {

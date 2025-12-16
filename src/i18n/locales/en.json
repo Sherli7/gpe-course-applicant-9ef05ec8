@@ -15,6 +15,7 @@
     "previous": "Previous",
     "next": "Next", 
     "submit": "Submit Application",
+    "invalidDate": "Invalid date format",
     "edit": "Edit",
     "newApplication": "New Application",
     "resumeDraft": "Resume Draft"
